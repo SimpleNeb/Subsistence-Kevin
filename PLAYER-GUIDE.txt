@@ -1,0 +1,81 @@
+KEVIN COMPANION — 0.2.0 PREVIEW GUIDE
+
+A FRIEND IN THE WILDERNESS
+Kevin joins you automatically when his mod is selected. No recruitment quest:
+start or continue a supported single-player world and find him by your side.
+
+INSTALL
+Close Subsistence. Open Kevin Setup supplied with this release,
+and choose Install / Update. Setup finds your Steam game folder; Browse lets you
+select it if needed. Then start Subsistence, select Kevin Companion in your
+profile's Mods list, and start or continue that profile.
+
+A Workshop release still requires Setup to install Kevin's companion code.
+Subscription alone is not enough. Project downloads belong at:
+github.com/SimpleNeb/Subsistence-Kevin
+
+TALK TO KEVIN
+Stand close and press your normal Use key to open his inventory.
+Crouch and press Use to open his command menu:
+  Follow Me — Kevin follows and runs when he falls behind.
+  Stay Here — Kevin waits where you leave him.
+  Inventory & Equipment — open his cargo, weapons and clothing.
+  Gather Wood — Kevin needs a usable axe in his inventory or toolbelt.
+  Gather Fiber — collect nearby fiber plants; no tool required.
+Click a command, press 1–5, or use the arrow keys and Enter.
+Escape or right-click closes the menu. Taking damage also closes it.
+
+CARRYING AND EQUIPMENT
+Kevin has 35 cargo slots, seven toolbelt slots and six clothing slots.
+Drag items into his inventory; shift-click into Kevin is disabled. To take items
+back, drag them out or shift-click them into your inventory if you have room.
+Put clothing and armor in the matching clothing slots. Items containing their
+own storage cannot be placed in Kevin's inventory.
+
+Put a supported firearm in his toolbelt and supply its matching ammunition:
+  M9 or Red9 — 9mm rounds.
+  M37 shotgun — shotgun shells.
+  Double-barrel shotgun — shotgun shells or shotgun slugs.
+  Rifle or lever-action rifle — rifle rounds.
+  Revolver — .44 rounds.
+Kevin reloads from the ammunition he actually carries. Explosive, incendiary,
+and other unsupported weapon/ammunition combinations are not used for defense.
+His ammunition and axe condition are finite. He defends himself and you against
+immediate threats. Gathering fills cargo slots and stops when full.
+
+WOOD AND FIBER
+Kevin gathers nearby resources while you remain close. Wood comes from actual
+trees and follows the player's tree-depletion record. His axe wears with use.
+Fiber comes from actual plants, which are consumed. A full cargo inventory stops
+gathering before a resource is consumed. Give a new order to change his job.
+Gathering jobs do not resume after a reload, revival, or combat interruption.
+Open the menu and give the order again when you are ready.
+
+IF KEVIN DIES
+His belongings stay in his dropped loot bag.
+Crouch and press Use on that bag to revive him nearby, or wait about two minutes
+while the world is running for him to return near you on safe outdoor ground. He returns with
+half health and an empty inventory. Retrieve his belongings from the old bag;
+revival never duplicates them. Stand and use the bag for normal looting.
+Saving and quitting preserves his remaining return time. The countdown pauses
+while Kevin is disabled or the player is dead. The normal game's bag expiry
+still applies, so collect valuable equipment promptly.
+
+DISABLE OR UPDATE
+Close the game and open Setup again. Disable Kevin restores the original game
+startup files and retains Kevin's compatibility package and saved belongings.
+Install / Update enables the supported build again. Keep the .KevinLoader folder
+in the game directory: it contains the original-file backups and install record.
+Updating from the tested 0.1.0 preview is supported by this release's installer.
+
+PREVIEW LIMITS
+Windows, standalone single-player, Subsistence Alpha 68.19 only.
+Multiplayer is not supported. Movement and gathering are intended for outdoor
+surface terrain; following pauses around bases and caves. There is no teleport
+catch-up. Obstacles and terrain may require you to reposition or repeat an order.
+Unsupported game versions and conflicting file changes are refused by Setup.
+After a game update, use a matching Kevin release rather than forcing a patch.
+This is an unofficial community mod, not affiliated with Subsistence's developer.
+
+Setup is an unsigned preview. Keep its accompanying SHA256 checksum with the
+download. A ZIP containing the same installer is available as a fallback.
