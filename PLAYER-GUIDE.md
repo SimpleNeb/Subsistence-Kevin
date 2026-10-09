@@ -1,26 +1,32 @@
-# Kevin Companion 0.2.1 preview — player guide
+# Kevin Companion 0.2.2 preview — player guide
 
 Kevin joins you automatically when his mod is selected. Start or continue a
 supported single-player world; no recruitment quest is required.
 
-Version 0.2.1 links the installer to
-[Kevin's Workshop item](https://steamcommunity.com/sharedfiles/filedetails/?id=3816609201).
-The companion's gameplay is the same as 0.2.0.
+Version 0.2.2 expands the search for wood and fiber and moves each new search
+with Kevin as he works. It keeps the same
+[Workshop item](https://steamcommunity.com/sharedfiles/filedetails/?id=3816609201)
+and the existing inventory, equipment, defense and revival behavior.
 
 ## Install or update
 
 1. Subscribe to the Workshop item.
-2. Close Subsistence. [Download Kevin Setup 0.2.1](https://github.com/SimpleNeb/Subsistence-Kevin/raw/7d4ddfba7c9aeac9cfb2e7e19fbf41fe124fa3ec/downloads/Kevin-Setup-0.2.1-preview-Alpha68.19.exe),
+2. Close Subsistence. [Download Kevin Setup 0.2.2](https://github.com/SimpleNeb/Subsistence-Kevin/raw/3eaf0ede184267efe3e96dad30005b04f1338703/downloads/Kevin-Setup-0.2.2-preview-Alpha68.19.exe),
    open it, and click **Install / Update**. Use **Browse** if Setup cannot find
    your Steam game folder.
 3. Start the game, select **Kevin Companion** in the profile's **Mods** list,
    and start or continue that profile.
 
 Subscribing alone does not install Kevin's companion code. Setup is required,
-including when upgrading from the supported **0.1.0 or 0.2.0 previews**. No
+including when upgrading from the supported **0.1.0, 0.2.0 or 0.2.1 previews**. No
 compiler or account login is needed in Setup. If you use the
-[ZIP installer](https://github.com/SimpleNeb/Subsistence-Kevin/raw/7d4ddfba7c9aeac9cfb2e7e19fbf41fe124fa3ec/downloads/Kevin-Companion-0.2.1-preview-Alpha68.19.zip)
+[ZIP installer](https://github.com/SimpleNeb/Subsistence-Kevin/raw/3eaf0ede184267efe3e96dad30005b04f1338703/downloads/Kevin-Companion-0.2.2-preview-Alpha68.19.zip)
 instead, extract the complete archive and double-click **Install Kevin.cmd**.
+
+**For every Kevin update, download and run the new version's installer with the
+game closed.** A Workshop update alone does not update the installed companion
+code. Keep your subscription and choose **Install / Update** in the new Setup,
+or run **Install Kevin.cmd** from the new ZIP.
 
 ## Talk to Kevin
 
@@ -66,10 +72,16 @@ Give Kevin a usable axe in his cargo or toolbelt, then choose **Gather Wood**.
 Wood comes from actual trees and follows the player's tree-depletion record.
 Chopping wears the axe. **Gather Fiber** consumes actual nearby plants.
 
-Stay near Kevin while he works. Gathering stops if his cargo is full, resources
-are unavailable, the route is blocked or the job becomes unsafe. A full cargo
-inventory stops gathering before a resource is consumed. Choose another command
-to change his job.
+Kevin now searches 2.5 times farther than before, centered on his current
+position whenever he chooses the next resource. He still works within a limited
+distance of you, so stay near him. The wider search helps him move through
+nearby patches; it does not make every tree or plant reachable.
+
+Gathering can stop if his cargo is full, his axe is unusable, no reachable
+resources remain in range, the route is blocked or the job becomes unsafe.
+A full cargo inventory stops gathering before a resource is consumed. If Kevin
+stops gathering and follows you, move near another patch and give the order
+again. Choose another command to change his job.
 
 Gathering jobs do not resume after a reload, revival or combat interruption.
 Open the command menu and give the order again.

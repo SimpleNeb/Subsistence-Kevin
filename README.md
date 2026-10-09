@@ -2,33 +2,37 @@
 
 # Kevin Companion for Subsistence
 
-**0.2.1 preview · Subsistence Alpha 68.19 · Windows · Single-player**
+**0.2.2 preview · Subsistence Alpha 68.19 · Windows · Single-player**
 
 A friend for the wilderness. Kevin joins you automatically, carries the supplies
 you cannot leave behind, wears the gear you give him, and helps defend against
 immediate threats. Send him to gather nearby wood or fiber while you work.
 
-Version **0.2.1 links the local installer to the Steam Workshop item**. Its
-companion gameplay is unchanged from 0.2.0.
+Version **0.2.2 expands gathering range**. Kevin searches 2.5 times farther for
+wood and fiber, and searches from his current position each time he chooses the
+next resource. This helps him continue through nearby patches while staying
+within a limited distance of you.
 
 ## Install
 
 1. [Subscribe to Kevin Companion on Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3816609201).
-2. Close Subsistence. [Download Kevin Setup 0.2.1](https://github.com/SimpleNeb/Subsistence-Kevin/raw/7d4ddfba7c9aeac9cfb2e7e19fbf41fe124fa3ec/downloads/Kevin-Setup-0.2.1-preview-Alpha68.19.exe),
+2. Close Subsistence. [Download Kevin Setup 0.2.2](https://github.com/SimpleNeb/Subsistence-Kevin/raw/3eaf0ede184267efe3e96dad30005b04f1338703/downloads/Kevin-Setup-0.2.2-preview-Alpha68.19.exe),
    open it, and choose **Install / Update**. Setup finds your Steam game folder;
    choose **Browse** if needed.
 3. Start Subsistence, select **Kevin Companion** in your profile's **Mods** list,
    and start or continue that profile. Kevin needs no recruitment quest.
 
 **The Setup step is required.** A Workshop subscription alone cannot install
-Kevin's companion code. Run Setup again when updating; you do not need to
-compile anything or enter account credentials into the installer.
+Kevin's companion code. **For every Kevin update, download and run that
+version's new Setup with the game closed, then choose Install / Update.** Steam
+does not update the installed companion code for you. You do not need to compile
+anything or enter account credentials into the installer.
 
-Already using the supported **0.1.0 or 0.2.0 preview**? Close the game and run
+Already using the supported **0.1.0, 0.2.0 or 0.2.1 preview**? Close the game and run
 the new Setup's **Install / Update**. It preserves the required backups and
 compatibility package. The installer does not rewrite your saves.
 
-Prefer a ZIP? [Download the 0.2.1 ZIP installer](https://github.com/SimpleNeb/Subsistence-Kevin/raw/7d4ddfba7c9aeac9cfb2e7e19fbf41fe124fa3ec/downloads/Kevin-Companion-0.2.1-preview-Alpha68.19.zip),
+Prefer a ZIP? [Download the 0.2.2 ZIP installer](https://github.com/SimpleNeb/Subsistence-Kevin/raw/3eaf0ede184267efe3e96dad30005b04f1338703/downloads/Kevin-Companion-0.2.2-preview-Alpha68.19.zip),
 extract the complete archive, and double-click **Install Kevin.cmd**. Use either
 Setup or the ZIP; you do not need both.
 
@@ -48,7 +52,10 @@ Setup or the ZIP; you do not need both.
 His commands are **Follow Me**, **Stay Here**, **Inventory & Equipment**,
 **Gather Wood**, and **Gather Fiber**. Wood gathering needs a usable axe;
 fiber gathering needs no tool. Axes wear, trees deplete and plants are picked.
-Stay nearby and repeat a gathering order after a reload, revival or combat.
+Stay nearby while he works. Full cargo, an unusable axe, blocked routes or no
+reachable resources in range can still end a job. Move near another patch and
+give the gathering order again when needed. Repeat the order after a reload,
+revival or combat interruption.
 
 Kevin offers **35 cargo slots**, plus weapon and clothing slots. Give him a
 supported firearm and matching ammunition: he uses what he actually carries.
@@ -75,7 +82,7 @@ Multiplayer, building jobs and direct player control of Kevin are not included.
 Setup refuses unsupported game builds and conflicting file changes.
 
 [Build and validation details](BUILD-PROOF.md) distinguish the inherited gameplay
-checks from the new Workshop and installer checks. Setup is an unsigned community
+checks from the new gathering, installer and save checks. Setup is an unsigned community
 preview; SHA256 checksums accompany the downloads. Report issues with your game
 build and Kevin version.
 

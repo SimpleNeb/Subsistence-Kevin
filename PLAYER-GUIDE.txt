@@ -1,4 +1,4 @@
-KEVIN COMPANION — 0.2.1 PREVIEW GUIDE
+KEVIN COMPANION — 0.2.2 PREVIEW GUIDE
 
 A FRIEND IN THE WILDERNESS
 Kevin joins you automatically when his mod is selected. No recruitment quest:
@@ -44,10 +44,20 @@ His ammunition and axe condition are finite. He defends himself and you against
 immediate threats. Gathering fills cargo slots and stops when full.
 
 WOOD AND FIBER
-Kevin gathers nearby resources while you remain close. Wood comes from actual
-trees and follows the player's tree-depletion record. His axe wears with use.
-Fiber comes from actual plants, which are consumed. A full cargo inventory stops
-gathering before a resource is consumed. Give a new order to change his job.
+Kevin gathers nearby resources while you remain close. In 0.2.2, he searches
+2.5 times farther than before and searches around his current position whenever
+he chooses the next resource. This helps him continue into nearby patches. He
+still works within a limited distance of you.
+
+Wood comes from actual trees and follows the player's tree-depletion record.
+His axe wears with use. Fiber comes from actual plants, which are consumed.
+A full cargo inventory stops gathering before a resource is consumed. Give a
+new order to change his job.
+
+A wider search does not make every resource reachable. Terrain, blocked routes,
+a broken axe, full cargo or moving too far away can stop the job. When no
+reachable resources remain in range, Kevin stops gathering and follows you.
+Move near another patch and give the gathering order again when needed.
 Gathering jobs do not resume after a reload, revival, or combat interruption.
 Open the menu and give the order again when you are ready.
 
@@ -66,7 +76,8 @@ Close the game and open Setup again. Disable Kevin restores the original game
 startup files and retains Kevin's compatibility package and saved belongings.
 Install / Update enables the supported build again. Keep the .KevinLoader folder
 in the game directory: it contains the original-file backups and install record.
-Updating from the supported 0.1.0 and 0.2.0 previews is supported by this installer.
+Use the new installer for this update. It checks whether your earlier Kevin
+installation is supported before changing files.
 
 PREVIEW LIMITS
 Windows, standalone single-player, Subsistence Alpha 68.19 only.
@@ -82,6 +93,6 @@ download. A ZIP containing the same installer is available as a fallback.
 
 WORKSHOP LINK
 https://steamcommunity.com/sharedfiles/filedetails/?id=3816609201
-Version 0.2.1 links the local installation to this Workshop item. It uses the
-same companion gameplay code as version 0.2.0. Run Install / Update when upgrading.
+Version 0.2.2 keeps the same Workshop item and expands gathering range. Run
+Install / Update with the new local installer to receive the gameplay update.
 The installer is still required; subscribing alone does not install the code.

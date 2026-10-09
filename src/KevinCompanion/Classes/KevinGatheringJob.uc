@@ -3,6 +3,10 @@
 class KevinGatheringJob extends Actor
     dependson(ColdLootSpawner);
 
+const MaxOwnerTargetDistance = 4000;
+const MaxOwnerWorkDistance = 4500;
+const ApproachTimeoutSeconds = 35;
+
 var KevinHunterController Worker;
 var KevinWoodHarvester WoodHarvester;
 var name JobKind;
@@ -47,7 +51,7 @@ function bool CanWorkNow()
         Worker.CompanionOwner != none && Worker.CompanionOwner.Pawn != none && Worker.CompanionOwner.Pawn.Health > 0 &&
         KevinCompanionPawn(Worker.Pawn) != none && !KevinCompanionPawn(Worker.Pawn).IsKevinInventoryBusy() &&
         !Worker.IsInCombat() && !Worker.bIsInBase && !Worker.IsInCave() && !Worker.IsInLavaCave() &&
-        VSize(Worker.Pawn.Location - Worker.CompanionOwner.Pawn.Location) <= 1800 && GetInventory() != none;
+        VSize(Worker.Pawn.Location - Worker.CompanionOwner.Pawn.Location) <= MaxOwnerWorkDistance && GetInventory() != none;
 }
 
 function bool CanFitSingle(class<ColdInventoryItem> itemClass, int count)
@@ -182,7 +186,7 @@ function bool SetResourceTarget(Actor resource, vector resourceLocation, optiona
     if (resource == none || Worker == none || Worker.Pawn == none) { return false; }
     TargetRejection = "too far from player";
     if (Worker.CompanionOwner == none || Worker.CompanionOwner.Pawn == none ||
-        VSize(resourceLocation - Worker.CompanionOwner.Pawn.Location) > 1650) { return false; }
+        VSize(resourceLocation - Worker.CompanionOwner.Pawn.Location) > MaxOwnerTargetDistance) { return false; }
     ground = resourceLocation;
     if (ColdTree(resource) != none) {
         ground = ColdTree(resource).GetGroundLocAtBaseOfTree();
@@ -216,19 +220,26 @@ function bool FindResource()
     local vector bestLocation, atLocation;
     local byte bush, bestBush;
     local float distance, bestDistance;
-    local int checked, found, available, allFiber;
+    local int checked, found, available, allFiber, outsideRange, skipped;
     LastReason = "";
     if (!CanWorkNow()) { LastReason = "Gathering is unavailable here."; return false; }
+    // Continue from Kevin's current position after each resource, rather than
+    // exhausting only the small patch where the order was first issued.
+    SearchOrigin = Worker.Pawn.Location;
     bestDistance = 1000000;
     if (JobKind == 'Wood') {
         if (!Worker.HasUsableAxe()) { LastReason = "Give Kevin a usable axe to gather wood."; return false; }
         if (!CanFitSingle(class'ColdInventoryItem_Log', 1)) { LastReason = "Kevin's cargo is full."; return false; }
         foreach CollidingActors(class'ColdTree', tree, SearchRadius, SearchOrigin) {
+            distance = VSize(tree.Location - SearchOrigin);
+            if (distance > SearchRadius) { outsideRange++; continue; }
             found++;
-            if (SkippedResources.Find(tree) != INDEX_NONE || !IsTreeAvailable(tree)) { continue; }
+            if (SkippedResources.Find(tree) != INDEX_NONE) { skipped++; continue; }
+            if (!IsTreeAvailable(tree)) { continue; }
             available++;
-            if (++checked > 64) { break; }
-            distance = VSize(tree.Location - Worker.Pawn.Location);
+            checked++;
+            // Inspect the complete local query; actor enumeration order must
+            // not hide a reachable target beyond an arbitrary first64 entries.
             if (distance >= bestDistance) { continue; }
             if (distance < bestDistance && SetResourceTarget(tree, tree.Location)) {
                 best = tree; bestLocation = tree.Location; bestDistance = distance;
@@ -242,14 +253,15 @@ function bool FindResource()
         foreach DynamicActors(class'ColdLootVegetation', plant) {
             if (ColdLootVegetation_FiberPlant(plant) == none && ColdLootVegetation_FiberPatch(plant) == none) { continue; }
             allFiber++;
-            if (VSize(plant.Location - SearchOrigin) > SearchRadius || SkippedResources.Find(plant) != INDEX_NONE) { continue; }
+            if (VSize(plant.Location - SearchOrigin) > SearchRadius) { outsideRange++; continue; }
             found++;
+            if (SkippedResources.Find(plant) != INDEX_NONE) { skipped++; continue; }
             if (!SelectFiberBush(plant, atLocation, bush)) {
                 if (found <= 8) { LogInternal("KEVIN GATHER FIBER context=" $ FiberContextRejection $ " actor=" $ string(plant)); }
                 continue;
             }
             available++;
-            if (++checked > 64) { break; }
+            checked++;
             distance = VSize(atLocation - Worker.Pawn.Location);
             if (distance < bestDistance && SetResourceTarget(plant, atLocation, bush)) {
                 best = plant; bestLocation = atLocation; bestBush = bush; bestDistance = distance;
@@ -260,6 +272,7 @@ function bool FindResource()
     TargetResource = none;
     LogInternal("KEVIN GATHER SEARCH EMPTY kind=" $ string(JobKind) $ " worker=" $ string(Worker.Pawn.Location) $
         " owner=" $ string(Worker.CompanionOwner.Pawn.Location) $ " origin=" $ string(SearchOrigin) $
+        " radius=" $ string(SearchRadius) $ " outsideRange=" $ string(outsideRange) $ " skipped=" $ string(skipped) $
         " candidates=" $ string(found) $ " available=" $ string(available) $ " checked=" $ string(checked) $
         " allRenderedFiber=" $ string(allFiber));
     LastReason = JobKind == 'Wood' ? "No reachable wood remains nearby." : "No reachable fiber remains nearby.";
@@ -284,7 +297,8 @@ function bool IsTargetInReach()
 
 function vector GetApproachPoint()
 {
-    if (TargetResource == none || TargetResource.bDeleteMe || WorldInfo.TimeSeconds - TargetStartedAt > 20) { return vect(0,0,0); }
+    if (TargetResource == none || TargetResource.bDeleteMe ||
+        WorldInfo.TimeSeconds - TargetStartedAt > ApproachTimeoutSeconds) { return vect(0,0,0); }
     return class'ColdPositionHelper'.static.GetNonBlockedPathTowardsLocation(
         Worker.Pawn, Worker.Pawn.Location, StandLocation, 600, 0, 300, true, false, false, false, false);
 }
@@ -381,7 +395,7 @@ simulated function Destroyed()
 
 defaultproperties
 {
-    SearchRadius=1400
+    SearchRadius=3500
     bHidden=true
     bCollideActors=false
     bBlockActors=false
