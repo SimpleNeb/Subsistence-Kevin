@@ -9,13 +9,13 @@ immediate threats. Send him to gather wood or fiber while you work nearby.
 For **Subsistence Alpha 68.19 on Windows, standalone single-player only**.
 You need your own installed copy of that game build.
 
-1. Close Subsistence and [download Kevin Setup](downloads/Kevin-Setup-0.2.0-preview-Alpha68.19.exe).
+1. Close Subsistence and [download Kevin Setup](https://github.com/SimpleNeb/Subsistence-Kevin/raw/b793c17a68246fb815df2bb2a9ba2e72bb482277/downloads/Kevin-Setup-0.2.0-preview-Alpha68.19.exe).
 2. Open it and choose **Install / Update**. Setup finds the Steam game folder;
    use **Browse** if it cannot identify yours.
 3. Start Subsistence, select **Kevin Companion** in your profile's **Mods** list,
    and start or continue the profile. Kevin needs no recruitment quest.
 
-Prefer a ZIP? [Download the ZIP installer](downloads/Kevin-Companion-0.2.0-preview-Alpha68.19.zip),
+Prefer a ZIP? [Download the ZIP installer](https://github.com/SimpleNeb/Subsistence-Kevin/raw/b793c17a68246fb815df2bb2a9ba2e72bb482277/downloads/Kevin-Companion-0.2.0-preview-Alpha68.19.zip),
 extract the entire archive, and double-click **Install Kevin.cmd**. It contains
 the same companion package and installer scripts. Choose either Setup or the ZIP;
 you do not need both. No compiler, SDK, Python, or account login is required.
