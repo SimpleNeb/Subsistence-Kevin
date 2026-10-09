@@ -1,4 +1,4 @@
-KEVIN COMPANION — 0.2.0 PREVIEW GUIDE
+KEVIN COMPANION — 0.2.1 PREVIEW GUIDE
 
 A FRIEND IN THE WILDERNESS
 Kevin joins you automatically when his mod is selected. No recruitment quest:
@@ -66,7 +66,7 @@ Close the game and open Setup again. Disable Kevin restores the original game
 startup files and retains Kevin's compatibility package and saved belongings.
 Install / Update enables the supported build again. Keep the .KevinLoader folder
 in the game directory: it contains the original-file backups and install record.
-Updating from the tested 0.1.0 preview is supported by this release's installer.
+Updating from the supported 0.1.0 and 0.2.0 previews is supported by this installer.
 
 PREVIEW LIMITS
 Windows, standalone single-player, Subsistence Alpha 68.19 only.
@@ -79,3 +79,9 @@ This is an unofficial community mod, not affiliated with Subsistence's developer
 
 Setup is an unsigned preview. Keep its accompanying SHA256 checksum with the
 download. A ZIP containing the same installer is available as a fallback.
+
+WORKSHOP LINK
+https://steamcommunity.com/sharedfiles/filedetails/?id=3816609201
+Version 0.2.1 links the local installation to this Workshop item. It uses the
+same companion gameplay code as version 0.2.0. Run Install / Update when upgrading.
+The installer is still required; subscribing alone does not install the code.

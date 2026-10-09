@@ -1,10 +1,10 @@
 {
   "format": "kevin-public-build-proof-v1",
   "releaseStatus": "VALIDATED",
-  "version": "0.2.0-preview",
-  "buildId": "alpha68.19-preview-v11",
-  "archiveSha256": "1db62fc5ed5811007166ab0e4aa3707651f3240e5417714aaddbfaa94560ed89",
-  "setupSha256": "eddbe5345a1af1cc2c68c32e0cf31358b148042543d5b2a219ec61cbbe0d0acc",
+  "version": "0.2.1-preview",
+  "buildId": "alpha68.19-preview-workshop-021",
+  "archiveSha256": "27ab04eb3b46d9e365f67d0be1cb03b5361fa59ffa205a8127ab6e2454d7c5ea",
+  "setupSha256": "543847d4c0a7cc7e3315a7471319862a92c738b18680828b01b4e4ba5beb3cbc",
   "productionSha256": "e8455fdd1308ed952b162671d9e045e2df04e0da3e4a059b42308e9230b45e0e",
   "frozenSourceManifestSha256": "fade6438144f7a337829dc77963bce6d3cee678323cb42731b692ec89aeed124",
   "productionSourceSha256": {
