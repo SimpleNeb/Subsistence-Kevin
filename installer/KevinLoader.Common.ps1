@@ -50,7 +50,9 @@ function Get-KevinInteger($Value) {
     return $number
 }
 
-function Read-KevinJson([string]$Path) { return (Get-Content -LiteralPath $Path -Raw | ConvertFrom-Json) }
+# Match Write-KevinJson's UTF-8 encoding explicitly. Windows PowerShell 5.1
+# otherwise reads BOM-less records as ANSI and corrupts non-ASCII game paths.
+function Read-KevinJson([string]$Path) { return (Get-Content -LiteralPath $Path -Raw -Encoding UTF8 | ConvertFrom-Json) }
 function Write-KevinJson([string]$Path, $Value) {
     [IO.File]::WriteAllText($Path, ($Value | ConvertTo-Json -Depth 30), (New-Object Text.UTF8Encoding($false)))
 }

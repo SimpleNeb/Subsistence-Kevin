@@ -10,9 +10,11 @@ VALIDATED release status, native UUID and version. It extracts into a unique loc
 data folder and checks those files again before running the SAME embedded installer
 or disable script in hidden Windows PowerShell 5.1. The original scripts still enforce
 game closed, exact game version, package hashes, backups, transactions and rollback.
-This wrapper adds no independent path around their guards and requests no UAC prompt.
-Access-denied errors remain visible; the player can explicitly rerun as administrator
-when their Steam folder permissions require it. It never escalates itself.
+This wrapper adds no independent path around their guards. It starts with normal
+Windows permissions. An access-denied failure offers Retry as administrator, which
+restarts the same Setup EXE through the Windows permission prompt and preserves
+the selected folder and operation. The elevated EXE revalidates and extracts its
+own embedded ZIP. Cancelling the Windows prompt starts no retry.
 
 Build ONLY after a ZIP has passed all release gates:
   Windows PowerShell 5.1 -File release/setup/Build-Setup.ps1
@@ -29,14 +31,21 @@ Unsigned preview: no signing certificate is available. Do not claim a trusted/si
 publisher or tell players to disable security software. Publish SHA256 and source on
 the verified project release page. Keep the ZIP/manual .cmd option as a fallback.
 
-Prototype validation includes corrupt hash/content rejection, candidate/test/path
-exclusion, extracted-script tamper rejection, argument quoting and an offscreen render.
-It does not by itself attest a clicked Install/Disable end-to-end UI run. Root owns the
-actual isolated installer/game validation. A future v0.2 EXE must embed the exact final
-v0.2 ZIP, including its tested upgrade policy and scripts; rebuilding after tests changes
-the wrapper hash, so preserve the resulting evidence alongside its published checksum.
+Test-Setup.ps1 covers archive checks, tamper rejection, argument quoting, permission
+retry construction, failure guidance and an offscreen render. It does not execute
+the installer or the Windows permission prompt. tools/Test-SetupFreshInstall.ps1
+separately drives the real SetupForm install/disable worker against isolated copies
+of retail files, including Unicode paths and write failures. It never launches the
+game. Preserve the exact final EXE's test evidence and published checksum; rebuilding
+after testing changes the wrapper hash. Real interactive UAC consent is separate
+from testing the same-EXE runas request and error handling.
 
 Extracted packages are retained in LocalAppData/KevinCompanion/Setup for troubleshooting.
+Each install/disable attempt also saves a report in LocalAppData/KevinCompanion/Logs.
+Save setup report exports a copy. Reports contain the selected local game path,
+release identity, Windows/access information and installer output, but no save
+contents or credentials. A failure before that folder can be created remains on
+screen. Read player guide opens PLAYER-GUIDE.txt for releases that include it.
 They contain only public release files. The UI cannot be closed during an active file
 operation; externally killing Windows/PowerShell remains subject to installer journal
 recovery on the next run. Game backups and saved-class packages are retained as before.

@@ -46,6 +46,8 @@ try {
     $proof = [ordered]@{ format='kevin-setup-build-v1'; version=$payload.Version; buildId=$payload.BuildId;
         archiveSha256=$hash; setupSha256=$exeHash; sourceSha256=@{};
         signed=$false; requestedExecutionLevel='asInvoker'; networkAccess=$false;
+        elevationRetry='User-clicked same-EXE runas after access denial; preserves selected game path and operation';
+        diagnosticLogs='LocalAppData/KevinCompanion/Logs';
         wrapperGameplayTested=$false; note='Wraps the exact audited ZIP; no installer or game was run by this build.' }
     foreach ($name in @('BundlePayload.cs','KevinSetup.cs','app.manifest','Build-Setup.ps1')) {
         $proof.sourceSha256[$name] = (Get-FileHash -LiteralPath (Join-Path $PSScriptRoot $name) -Algorithm SHA256).Hash.ToLowerInvariant()

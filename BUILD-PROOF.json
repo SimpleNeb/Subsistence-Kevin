@@ -1,11 +1,14 @@
 {
   "format": "kevin-public-build-proof-v1",
   "releaseStatus": "VALIDATED",
-  "version": "0.2.2-preview",
-  "buildId": "alpha68.19-preview-gathering-022",
-  "archiveSha256": "0a3877e002402cf980647997a00d0a7a3bd21af50f74c16736cbadad2f58c5e9",
-  "setupSha256": "fbccb529511746a3abe9dc087f954b52d9dcb7356ac552a36c0e1c7bfb2d66f7",
+  "version": "0.2.3-preview",
+  "buildId": "alpha68.19-preview-installer-023",
+  "releaseKind": "scoped-installer-hotfix",
+  "archiveSha256": "402d9789cf9c33dde6b4023e29ab42ffba35b2c5e9dd5ffe2b4f10a1f3d45caa",
+  "setupSha256": "5de7d4f8355b72511981671c8540e3937610b1913990d85e74baf8b37db29f08",
+  "manifestSha256": "938dc455b1c1987adfa24cfeae52aff68b68d1a1ba1419df991cc38ac4811b96",
   "productionSha256": "c23d1f377c329adf2dadd95132be192c0066a72fd04a049a8042cc040043f4bb",
+  "installedGameplayAndMetadataByteIdenticalTo": "0.2.2-preview",
   "frozenSourceManifestSha256": "4a47c2edf9067a1aeab3661d2782c05481c3dc0bc3c46996a3691b39cfdce3e0",
   "productionSourceSha256": {
     "KevinAccessModule.uc": "5087ff78927913d46a8b804ec11ce64dee7528374aea95d82e13406fa281447c",
@@ -30,9 +33,84 @@
   "setupSourceSha256": {
     "app.manifest": "dfd4ff01b073b108c14122b68efc1e097f74e5119c641831b7fdde94fbc8b245",
     "BundlePayload.cs": "3ebc7a2e3169c0b9058838fba53a1fd9d35e675191941d935b604c4a67a21a01",
-    "Build-Setup.ps1": "29394df7d4af84090539956402a6c16ad9451b24a0bf2a88101065be3fb9e330",
-    "KevinSetup.cs": "e3a379be9488c804f4844b5bf7f86cfccb349b395be4a4fcbd29ab9118382aae"
+    "Build-Setup.ps1": "2a4f3c5d3f9b82cf6a7daeca3fe7c2e5f7ee4b937c9c2a7df36739cc61e68f25",
+    "KevinSetup.cs": "3f3f1ce79baa0f44636af4eb48085878374f6558bf1ea7456a6a5a60fc71eb64"
   },
+  "loaderCommonSha256": "361d50019da186be6734bdfa4218808bbb1245b5bc73a6dfb30d604c727c9bdf",
+  "setupBuildEvidenceSha256": "2b3d1887d9838cd305ceb9b8a7779c4bac6bc36c90b62c9a0a83cdf70424db77",
   "signed": false,
-  "limits": "Contains reviewed own source and exact validated preview artifacts. No game originals, SDK, test packages, save data or local filesystem paths."
+  "finalWrapperTests": {
+    "passed": 28,
+    "failed": 0,
+    "evidenceSha256": "269d37c87904cb2aab2c0fc9e53d70cfe29577af7d8e0f935a3465e8b0a42ebf"
+  },
+  "finalInstallationTests": {
+    "passed": 149,
+    "failed": 0,
+    "reviewSha256": "2917b3146647eb43b31f818e4f933cff5e26078ff90cf4b450628d8ee4e936ff",
+    "cases": [
+      {
+        "name": "Fresh install, repeat install, Disable and reinstall",
+        "passed": 50,
+        "failed": 0,
+        "evidenceSha256": "ff703c9526b267ca66349e19eb71ec0a0755042e45590badd545d5c4f8515bb9"
+      },
+      {
+        "name": "Protected-folder refusal, retry guidance and preservation",
+        "passed": 21,
+        "failed": 0,
+        "evidenceSha256": "8824c2b3fd5db36d72c1a9f83a38650d09ad630b0351f6d5e760c48dcba9ec88"
+      },
+      {
+        "name": "Mid-install write failure and complete rollback",
+        "passed": 21,
+        "failed": 0,
+        "evidenceSha256": "51ce1d4936dc1f6c54dcea819268cabc7cd8d005309cb7eed4fa3ccca3058f70"
+      },
+      {
+        "name": "Public 0.2.2 upgrade, repeat install, Disable and reinstall",
+        "passed": 57,
+        "failed": 0,
+        "evidenceSha256": "9fa041f723906d256d8eb61a05ac6a0ea7531552252652ee947372a3108e077a"
+      }
+    ],
+    "realSetupFormAndWindowsPowerShell51": true,
+    "gameLaunched": false,
+    "interactiveUacTested": false,
+    "livePlayerInstallationModified": false
+  },
+  "inheritedGameplayEvidence": {
+    "rerunForThisRelease": false,
+    "exactPublic022StaticAudits": 10,
+    "exactPublic022GatheringChecks": 34,
+    "exactPublic022NativeSaveChecks": 18,
+    "historicalFeatureChecks": 168,
+    "historicalWorkshopChecks": 11,
+    "note": "Earlier native save, revival and legacy migration evidence is inherited. No new gameplay or Steam runtime test is claimed for this installer-only repair."
+  },
+  "downloads": [
+    {
+      "name": "Kevin-Setup-0.2.3-preview-Alpha68.19.exe",
+      "url": "https://github.com/SimpleNeb/Subsistence-Kevin/raw/6410f4b8a0c93f52f692a61817bedadcbdf0dc7e/downloads/Kevin-Setup-0.2.3-preview-Alpha68.19.exe",
+      "sha256": "5de7d4f8355b72511981671c8540e3937610b1913990d85e74baf8b37db29f08",
+      "length": 259072,
+      "anonymousDownloadVerified": true,
+      "receiptSha256": "93afd6e413b4c659e6cc6b6805708e2b6923c2cff5d757dee86c3b661ff4eebb"
+    },
+    {
+      "name": "Kevin-Companion-0.2.3-preview-Alpha68.19.zip",
+      "url": "https://github.com/SimpleNeb/Subsistence-Kevin/raw/6410f4b8a0c93f52f692a61817bedadcbdf0dc7e/downloads/Kevin-Companion-0.2.3-preview-Alpha68.19.zip",
+      "sha256": "402d9789cf9c33dde6b4023e29ab42ffba35b2c5e9dd5ffe2b4f10a1f3d45caa",
+      "length": 229013,
+      "anonymousDownloadVerified": true,
+      "receiptSha256": "87860e55d998e6ffa59ccfad2f75388bcca648cae031598a04ba1c79b7639e72"
+    }
+  ],
+  "limitations": [
+    "The original home-PC failure cause remains unknown without its error report.",
+    "Permission tests cover denied writes and retry construction; UAC consent and elevated relaunch were not invoked.",
+    "Installation tests use isolated retail-file fixtures and save sentinels, not the player's live saves.",
+    "No game launch, multiplayer validation or long public playtest occurred in these installer checks."
+  ],
+  "limits": "Contains reviewed own source and exact preview artifact identities. No game originals, SDK, test packages, save data or local private filesystem paths."
 }

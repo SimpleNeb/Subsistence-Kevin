@@ -1,26 +1,28 @@
-# Kevin Companion 0.2.2 preview — player guide
+# Kevin Companion 0.2.3 preview — player guide
 
 Kevin joins you automatically when his mod is selected. Start or continue a
 supported single-player world; no recruitment quest is required.
 
-Version 0.2.2 expands the search for wood and fiber and moves each new search
-with Kevin as he works. It keeps the same
-[Workshop item](https://steamcommunity.com/sharedfiles/filedetails/?id=3816609201)
-and the existing inventory, equipment, defense and revival behavior.
+Version 0.2.3 improves Setup's permission handling and diagnostic reports, and
+corrects installation-record reading for non-English folder names. Gameplay is
+identical to 0.2.2, including its wider gathering range. Keep the same
+[Workshop subscription](https://steamcommunity.com/sharedfiles/filedetails/?id=3816609201).
+If Kevin already works, this version adds no gameplay changes.
 
 ## Install or update
 
 1. Subscribe to the Workshop item.
-2. Close Subsistence. [Download Kevin Setup 0.2.2](https://github.com/SimpleNeb/Subsistence-Kevin/raw/3eaf0ede184267efe3e96dad30005b04f1338703/downloads/Kevin-Setup-0.2.2-preview-Alpha68.19.exe),
+2. Close Subsistence. [Download Kevin Setup 0.2.3](https://github.com/SimpleNeb/Subsistence-Kevin/raw/6410f4b8a0c93f52f692a61817bedadcbdf0dc7e/downloads/Kevin-Setup-0.2.3-preview-Alpha68.19.exe),
    open it, and click **Install / Update**. Use **Browse** if Setup cannot find
-   your Steam game folder.
+   your Steam game folder. For an access-denied error, choose **Retry as
+   administrator** and approve the Windows permission prompt.
 3. Start the game, select **Kevin Companion** in the profile's **Mods** list,
    and start or continue that profile.
 
 Subscribing alone does not install Kevin's companion code. Setup is required,
-including when upgrading from the supported **0.1.0, 0.2.0 or 0.2.1 previews**. No
+including when upgrading from the supported **0.1.0, 0.2.0, 0.2.1 or 0.2.2 previews**. No
 compiler or account login is needed in Setup. If you use the
-[ZIP installer](https://github.com/SimpleNeb/Subsistence-Kevin/raw/3eaf0ede184267efe3e96dad30005b04f1338703/downloads/Kevin-Companion-0.2.2-preview-Alpha68.19.zip)
+[ZIP installer](https://github.com/SimpleNeb/Subsistence-Kevin/raw/6410f4b8a0c93f52f692a61817bedadcbdf0dc7e/downloads/Kevin-Companion-0.2.3-preview-Alpha68.19.zip)
 instead, extract the complete archive and double-click **Install Kevin.cmd**.
 
 **For every Kevin update, download and run the new version's installer with the
@@ -133,3 +135,24 @@ use the supplied checksums to identify the release you downloaded.
 
 This is an unofficial community mod, not affiliated with Subsistence's developer.
 See [build and validation details](BUILD-PROOF.md) for the checks and their scope.
+
+## If installation fails
+
+Keep Subsistence closed. Use **Browse** to select its folder containing
+`Binaries` and `UDKGame`. If Windows denies access, **Retry as administrator**
+reopens the same installer with your selected folder and action. Canceling the
+Windows permission prompt leaves Setup open so you can retry later.
+
+For other failures, click **Save setup report...**. Setup also saves reports in
+`%LOCALAPPDATA%\KevinCompanion\Logs`. Reports include local folder paths;
+review those before posting them publicly. Include the report, Kevin version
+and game build when reporting an issue.
+
+The ZIP fallback uses the same loader scripts. If its command window reports
+access denied, right-click **Install Kevin.cmd** and choose **Run as administrator**.
+Setup is recommended for its folder picker, retry button and saved reports.
+
+A game-version/checksum error needs a matching supported game build. Keep the
+`.KevinLoader` backups when a previous installation exists; do not force a
+patch over changed files. These improvements address reproduced installer
+issues, but an unfamiliar error still needs its report for diagnosis.

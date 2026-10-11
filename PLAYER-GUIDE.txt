@@ -1,4 +1,4 @@
-KEVIN COMPANION — 0.2.2 PREVIEW GUIDE
+KEVIN COMPANION — 0.2.3 PREVIEW GUIDE
 
 A FRIEND IN THE WILDERNESS
 Kevin joins you automatically when his mod is selected. No recruitment quest:
@@ -7,8 +7,11 @@ start or continue a supported single-player world and find him by your side.
 INSTALL
 Close Subsistence. Open Kevin Setup supplied with this release,
 and choose Install / Update. Setup finds your Steam game folder; Browse lets you
-select it if needed. Then start Subsistence, select Kevin Companion in your
-profile's Mods list, and start or continue that profile.
+select it if needed. If Setup reports access denied, click Retry as administrator
+and approve the Windows permission prompt. Your selected folder is kept and the
+installation continues. Writable game folders need no administrator permission.
+Then start Subsistence, select Kevin Companion in your profile's Mods list,
+and start or continue that profile.
 
 A Workshop release still requires Setup to install Kevin's companion code.
 Subscription alone is not enough. Project downloads belong at:
@@ -93,6 +96,21 @@ download. A ZIP containing the same installer is available as a fallback.
 
 WORKSHOP LINK
 https://steamcommunity.com/sharedfiles/filedetails/?id=3816609201
-Version 0.2.2 keeps the same Workshop item and expands gathering range. Run
-Install / Update with the new local installer to receive the gameplay update.
+Version 0.2.3 keeps the same Workshop item and gameplay as 0.2.2. It improves
+installation and handles non-English folder names in installation records.
+If Kevin already works, there is no gameplay update to install.
 The installer is still required; subscribing alone does not install the code.
+
+INSTALLATION HELP
+If Setup cannot find Subsistence, choose Browse and select its game folder
+(the folder containing Binaries and UDKGame). Close the game before installing.
+Access denied: choose Retry as administrator and approve the Windows prompt.
+Canceling permission leaves Setup open; you can try again later.
+Unsupported version or file checksum: check that your game build is supported.
+Keep .KevinLoader and its backups when a previous Kevin installation exists.
+
+If installation still fails, click Save setup report... and keep that report
+for troubleshooting. An automatic copy is also saved under
+%LOCALAPPDATA%\KevinCompanion\Logs. It includes local folder paths; review those
+before sharing the report publicly. An error report is needed to diagnose an
+unrecognized failure on another PC.

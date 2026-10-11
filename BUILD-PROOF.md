@@ -1,87 +1,104 @@
-# Kevin Companion 0.2.2 preview — build and validation
+# Kevin Companion 0.2.3 preview — build and validation
 
 ## What changed
 
-Kevin searches **2.5 times farther** for wood and fiber: 3,500 rather than
-1,400 Unreal units. Each new search starts from his current position, helping
-him continue through nearby patches. Targets stay within 4,000 units of you;
-work stops beyond 4,500. A longer approach can take up to 35 seconds before
-Kevin abandons it.
+This release repairs the installer. The separate Setup app adds **Retry as
+administrator** after an access-denied result, preserves the selected game path
+and install/disable operation, and saves a diagnostic report. Writable game
+folders still use the ordinary permissions of the user running Setup.
 
-Only `KevinGatheringJob.uc` changed among the **18 production classes**.
-The arbitrary 64-candidate search cutoff was removed. Native harvesting,
-axe wear, resource depletion and cargo checks are unchanged, as are the other
-17 production sources, save schema, startup patches, installer scripts and
-Workshop metadata.
+The loader now reads its JSON records explicitly as UTF-8. Windows PowerShell
+5.1 otherwise reads a record containing an accented folder name incorrectly.
+That defect reproduced in repeat installation, Disable and transaction recovery.
+A separate protected-folder test reproduced a first-install access-denied error.
+The original home-PC error was not available, so neither reproduction establishes
+what happened on that computer or to every subscriber.
 
-## Fresh checks on 0.2.2
+**All four native hooks, KevinCompanion.u and mod.json are byte-identical to
+public 0.2.2.** No gameplay, save schema or Workshop identity changes are included.
+Supported public 0.1.0, 0.2.0, 0.2.1 and 0.2.2 upgrade identities remain pinned.
+
+## Source preflight
 
 | Check | Result |
 | --- | --- |
-| Static package audits | **10 passed** |
-| Native gathering fixture | **34 passed, 0 failed** |
-| Native save/reload, disable and re-enable | **18 passed, 0 failed** |
-| Installer upgrade, disable and reinstall | **Passed; installer actions left saves unchanged** |
-| Final Setup wrapper | **21 passed, 0 failed** |
-| Public Setup and ZIP downloads | **Anonymous downloads matched their final SHA256 hashes** |
+| Windows PowerShell 5.1 UTF-8 lifecycle regression | 6 passed, 0 failed after the repair |
+| Synthetic loader transactions and safety checks | 24 passed |
+| Synthetic upgrade transactions and safety checks | 25 passed |
+| Revised Setup source wrapping the existing 0.2.2 ZIP | 28 passed, 0 failed |
+| Independent installer source review | No blocking findings |
 
-Gathering checks covered real tree selection beyond the old range, actual
-approach and harvest of distant fiber, continued searching from Kevin's new
-position, both player-distance limits, and the existing axe, depletion, cargo
-and cancellation checks. The distant-tree assertion verifies selection;
-the retained tree tests exercise actual chopping.
+The Setup source preflight above wraps the existing 0.2.2 payload; it is not a
+final 0.2.3 artifact test. Synthetic loader tests use inert files. They exercise
+transactions and records but do not launch Subsistence.
 
-The save cycle loaded an authentic 0.2.1 save and preserved the complete
-inventory fingerprint through all three stages. The installed upgrade baseline
-was an isolated 0.2.1 candidate whose six installed payload hashes matched the
-public release. A separate live upgrade from public 0.2.1 to 0.2.2 also passed,
-with **63 save files backed up and unchanged**. That installer check did not
-launch the game.
+## Final artifact evidence
 
-Setup wrapper checks cover its payload and window construction, not clicking
-installer buttons or game behavior; the installer cycles above tested those
-file changes separately.
+The exact final 0.2.3 Setup passed **28 wrapper checks** and **149 installation
+checks**, with zero failures:
 
-Tested production package SHA256:
+| Final artifact check | Passed | Failed |
+| --- | ---: | ---: |
+| Archive validation, tamper rejection, quoting, retry construction and offscreen UI | 28 | 0 |
+| Fresh install, repeat install, Disable and reinstall | 50 | 0 |
+| Protected-folder refusal, retry guidance and file preservation | 21 | 0 |
+| Mid-install write failure and complete rollback | 21 | 0 |
+| Public 0.2.2 upgrade, repeat install, Disable and reinstall | 57 | 0 |
+
+The installation checks drove the real Setup form's worker and Windows
+PowerShell 5.1 child process against isolated copies of the supported retail
+files. Tests covered accented folder names, saved installation reports, original
+backups, installed hashes and unchanged save sentinels. No game was launched.
+The upgrade started from the actual public 0.2.2 installation, inside an isolated
+fixture. It did not modify the player's live installation or saves.
+
+Permission tests reproduced denied writes and checked the available retry and
+saved report. **The Windows UAC prompt and elevated relaunch were not invoked.**
+The tests therefore do not establish successful permission approval on every PC.
+The original home-PC failure cause remains unknown without its error report.
+
+Anonymous downloads from the immutable links below matched the exact final
+local Setup and ZIP bytes. The evidence hashes and source identities are also
+listed in [BUILD-PROOF.json](BUILD-PROOF.json).
+
+## Inherited gameplay evidence
+
+The exact reused 0.2.2 gameplay package passed ten static audits, 34 targeted
+gathering checks and 18 native schema2 save/Disable/reinstall/reload checks.
+Earlier historical evidence includes 168 controlled feature checks, death-bag
+save cycles, legacy migration and an 11-check Workshop subscription/download
+test. These are inherited results, not new gameplay tests of this installer
+release. Gathering keeps the 2.5-times-wider search introduced in 0.2.2.
+
+Production package SHA256:
 
 ```text
 c23d1f377c329adf2dadd95132be192c0066a72fd04a049a8042cc040043f4bb
 ```
 
-## Inherited evidence and limits
-
-The earlier gameplay package passed **168 checks with zero failures** across
-commands, gathering, revival, inventory, defense and death. Earlier releases
-also completed live-inventory and death-bag save cycles, legacy-save migration,
-and an **11-check Workshop subscription/download test** with exact downloaded
-file verification. These are historical results, not fresh tests of 0.2.2.
-
 Supported: **Subsistence Alpha 68.19, Windows, standalone single-player**.
-Tests used isolated copies and disposable profiles. They do not establish
-multiplayer support, compatibility with every mod, or flawless navigation.
-Bases, caves and obstacles can still interrupt movement or gathering. There
-is no teleport catch-up or long-term public playtest claim.
-
-Test classes, compiler stubs, original game packages, SDK files and saves are
-excluded from the release. Setup is an unsigned community preview.
+There is no multiplayer, every-mod, flawless-navigation or long-term public
+playtest claim. Test classes, compiler stubs, original game packages, SDK files
+and saves are excluded from the release. Setup is an unsigned community preview.
 
 ## Verified downloads
 
-Both downloads below were retrieved anonymously from the immutable commit and
-matched the final local release bytes.
-
-[Kevin Setup 0.2.2](https://github.com/SimpleNeb/Subsistence-Kevin/raw/3eaf0ede184267efe3e96dad30005b04f1338703/downloads/Kevin-Setup-0.2.2-preview-Alpha68.19.exe) — SHA256:
+[Kevin Setup 0.2.3](https://github.com/SimpleNeb/Subsistence-Kevin/raw/6410f4b8a0c93f52f692a61817bedadcbdf0dc7e/downloads/Kevin-Setup-0.2.3-preview-Alpha68.19.exe) — SHA256:
 
 ```text
-fbccb529511746a3abe9dc087f954b52d9dcb7356ac552a36c0e1c7bfb2d66f7
+5de7d4f8355b72511981671c8540e3937610b1913990d85e74baf8b37db29f08
 ```
 
-[0.2.2 ZIP installer](https://github.com/SimpleNeb/Subsistence-Kevin/raw/3eaf0ede184267efe3e96dad30005b04f1338703/downloads/Kevin-Companion-0.2.2-preview-Alpha68.19.zip) — SHA256:
+[0.2.3 ZIP installer](https://github.com/SimpleNeb/Subsistence-Kevin/raw/6410f4b8a0c93f52f692a61817bedadcbdf0dc7e/downloads/Kevin-Companion-0.2.3-preview-Alpha68.19.zip) — SHA256:
 
 ```text
-0a3877e002402cf980647997a00d0a7a3bd21af50f74c16736cbadad2f58c5e9
+402d9789cf9c33dde6b4023e29ab42ffba35b2c5e9dd5ffe2b4f10a1f3d45caa
 ```
 
-For every update, download and run the new version's local installer with
-Subsistence closed. A Workshop subscription alone does not install or update
-Kevin's code. Earlier release checksums do not identify these downloads.
+Both files were downloaded anonymously from the immutable commit and matched
+the local tested artifacts. Corresponding `.sha256` files are in the downloads
+folder. Earlier release checksums do not identify these files.
+
+A Workshop subscription alone does not install or update Kevin's code. Download
+and run the local installer when installing a new release. Users already running
+0.2.2 successfully do not need this installer repair for gameplay changes.
