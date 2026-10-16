@@ -17,6 +17,126 @@ var float CursorX, CursorY, ViewWidth, ViewHeight;
 var float PanelX, PanelY, PanelWidth, RowY, RowHeight, UiScale;
 var string Feedback;
 var int RenderedFrames;
+// Player-local, unsaved recall overlay. The registry outlives Kevin's pawn.
+var KevinRegistry RecallRegistry;
+var bool bRecallHud;
+var bool bRecallCursor;
+
+function bool InitializeRecallHud(KevinRegistry registry, ColdPlayerController pc)
+{
+    local vector2d size;
+    if (registry == none || pc == none || pc.MyHUD == none || LocalPlayer(pc.Player) == none) { return false; }
+    RecallRegistry = registry; PlayerRef = pc; HudRef = pc.MyHUD;
+    bRecallHud = true;
+    LocalPlayer(pc.Player).ViewportClient.GetViewportSize(size);
+    ViewWidth = size.X; ViewHeight = size.Y;
+    Input = new(pc) class'KevinMenuInput';
+    Input.Menu = self; Input.Init(); Input.OnInitialize();
+    pc.Interactions.InsertItem(0, Input);
+    HudRef.AddPostRenderedActor(self);
+    return true;
+}
+
+function bool CanUseRecallHud()
+{
+    local KevinCompanionPawn p;
+    if (!bRecallHud || bClosing || RecallRegistry == none || RecallRegistry.bDeleteMe ||
+        !RecallRegistry.IsRuntimeEnabled() || PlayerRef == none || PlayerRef.bDeleteMe ||
+        PlayerRef != RecallRegistry.FindCompanionOwner() || PlayerRef.MyHUD != HudRef ||
+        HudRef == none || !HudRef.bShowHUD || PlayerRef.GetPlayerPawn() == none ||
+        PlayerRef.Pawn.bDeleteMe || PlayerRef.Pawn.Health <= 0 ||
+        !RecallRegistry.IsRecallPlayerUiReady(PlayerRef)) { return false; }
+    p = KevinCompanionPawn(RecallRegistry.CompanionPawn);
+    return p == none || p.KevinOrdersMenu == none || p.KevinOrdersMenu.bDeleteMe;
+}
+
+function bool SetRecallCursor(bool enabled)
+{
+    if (!bRecallHud || enabled == bRecallCursor) { return false; }
+    if (enabled) {
+        if (!CanUseRecallHud()) { return false; }
+        bRecallCursor = true;
+        CursorX = PanelX + PanelWidth * 0.5;
+        CursorY = RowY + RowHeight * 0.5;
+        PlayerRef.IgnoreMoveInput(true); PlayerRef.IgnoreLookInput(true);
+        bInputLocked = true;
+        PlayerRef.Pawn.StopFiring();
+        PlayerHealthAtOpen = PlayerRef.Pawn.Health;
+        QuickActionsRef = PlayerRef.GetPlayerPawn().QuickActions;
+        if (QuickActionsRef != none) {
+            bQuickActionsWereEnabled = QuickActionsRef.bEnabled;
+            QuickActionsRef.bEnabled = false;
+            QuickActionsRef.ClearAllInReach(); QuickActionsRef.HandleShowCrosshair(none);
+        }
+    } else {
+        bRecallCursor = false;
+        if (PlayerRef != none && bInputLocked) {
+            PlayerRef.IgnoreMoveInput(false); PlayerRef.IgnoreLookInput(false);
+        }
+        bInputLocked = false;
+        if (QuickActionsRef != none && !QuickActionsRef.bDeleteMe) {
+            QuickActionsRef.bEnabled = bQuickActionsWereEnabled;
+            QuickActionsRef.ClearAllInReach();
+        }
+        QuickActionsRef = none;
+    }
+    return true;
+}
+
+function bool HitRecall(float x, float y)
+{
+    return bRecallHud && RowHeight > 0 && x >= PanelX + 8 * UiScale &&
+        x <= PanelX + PanelWidth - 8 * UiScale && y >= RowY && y <= RowY + RowHeight;
+}
+
+function bool ExecuteRecall()
+{
+    local bool result;
+    if (!bRecallCursor || !CanUseRecallHud()) { return false; }
+    SetRecallCursor(false);
+    result = RecallRegistry.RequestRecall(PlayerRef, Feedback);
+    if (PlayerRef.GetHudMgr() != none) { PlayerRef.GetHudMgr().Message(Feedback); }
+    LogInternal("KEVIN HUD RECALL result=" $ string(result) $ " reason=" $ Feedback);
+    return result;
+}
+
+function RenderRecallHud(Canvas c)
+{
+    local string status;
+    local float distance;
+    if (!CanUseRecallHud()) { return; }
+    ViewWidth = c.SizeX; ViewHeight = c.SizeY;
+    UiScale = FClamp(FMin(ViewWidth / 1280.0, ViewHeight / 720.0), 0.65, 1.25);
+    PanelWidth = 260 * UiScale;
+    PanelX = ViewWidth - PanelWidth - 20 * UiScale;
+    PanelY = 110 * UiScale;
+    RowY = PanelY + 52 * UiScale; RowHeight = 28 * UiScale;
+    c.SetPos(PanelX, PanelY); c.SetDrawColor(9, 18, 15, 218); c.DrawRect(PanelWidth, 88 * UiScale);
+    c.SetPos(PanelX, PanelY); c.SetDrawColor(158, 189, 125, 255); c.DrawRect(PanelWidth, 2 * UiScale);
+    c.Font = class'Engine'.static.GetSmallFont();
+    DrawLabel(c, PanelX + 12 * UiScale, PanelY + 9 * UiScale, "KEVIN", 231, 238, 218, 0.95);
+    status = RecallRegistry.GetRecallStatus();
+    if (!RecallRegistry.bCompanionDead && RecallRegistry.CompanionPawn != none) {
+        distance = VSize(RecallRegistry.CompanionPawn.Location - PlayerRef.Pawn.Location);
+        status $= distance <= 600 ? " - nearby" : " - away";
+    }
+    DrawLabel(c, PanelX + 12 * UiScale, PanelY + 30 * UiScale, status, 168, 188, 165, 0.78);
+    c.SetPos(PanelX + 8 * UiScale, RowY);
+    if (bRecallCursor && HitRecall(CursorX, CursorY)) { c.SetDrawColor(60, 86, 52, 255); }
+    else { c.SetDrawColor(30, 49, 34, 255); }
+    c.DrawRect(PanelWidth - 16 * UiScale, RowHeight);
+    DrawLabel(c, PanelX + 16 * UiScale, RowY + 7 * UiScale,
+        bRecallCursor ? "CLICK: RECALL KEVIN" : "F6: RECALL KEVIN", 234, 239, 226, 0.82);
+    if (bRecallCursor) {
+        DrawLabel(c, PanelX, PanelY + 94 * UiScale, "F6 / Esc / right-click: cancel", 216, 216, 190, 0.72);
+        if (RecallRegistry.bCompanionDead) {
+            DrawLabel(c, PanelX, PanelY + 113 * UiScale, "His equipment stays in his death bag.", 216, 195, 144, 0.68);
+        }
+        c.SetDrawColor(238, 238, 210, 255); c.SetPos(CursorX - 5, CursorY - 1);
+        c.DrawRect(11, 3); c.SetPos(CursorX - 1, CursorY - 5); c.DrawRect(3, 11);
+    }
+    RenderedFrames++;
+}
 
 static function bool OpenFor(KevinCompanionPawn p, ColdPlayerController pc)
 {
@@ -76,6 +196,7 @@ function CloseMenu()
     // Destroyed is invoked synchronously before native bDeleteMe is reliable.
     // Clean up once even when the native destruction callback reenters here.
     if (bClosing) { return; }
+    if (bRecallCursor) { SetRecallCursor(false); }
     bClosing = true;
     bOpen = false;
     if (HudRef != none) { HudRef.RemovePostRenderedActor(self); }
@@ -102,12 +223,19 @@ function CloseMenu()
 simulated event Destroyed()
 {
     CloseMenu();
-    Kevin = none; PlayerRef = none; HudRef = none;
+    Kevin = none; RecallRegistry = none; PlayerRef = none; HudRef = none;
     super.Destroyed();
 }
 
 event Tick(float DeltaTime)
 {
+    if (bRecallHud) {
+        if (RecallRegistry == none || RecallRegistry.bDeleteMe || !RecallRegistry.IsRuntimeEnabled() ||
+            PlayerRef == none || PlayerRef.bDeleteMe || PlayerRef.MyHUD != HudRef ||
+            PlayerRef != RecallRegistry.FindCompanionOwner()) { CloseMenu(); return; }
+        if (bRecallCursor && (!CanUseRecallHud() || PlayerRef.Pawn.Health < PlayerHealthAtOpen)) { SetRecallCursor(false); }
+        return;
+    }
     if (!bOpen) { return; }
     if (Kevin == none || Kevin.bDeleteMe || Kevin.Health <= 0 ||
         PlayerRef == none || PlayerRef.bDeleteMe || PlayerRef.Pawn == none ||
@@ -174,6 +302,7 @@ simulated event PostRenderFor(PlayerController pc, Canvas canvas, vector cameraP
     local int i;
     local float y;
     local string title, rowHelp, status;
+    if (bRecallHud && pc == PlayerRef && canvas != none) { RenderRecallHud(canvas); return; }
     if (!bOpen || pc != PlayerRef || Kevin == none || canvas == none) { return; }
     c = KevinHunterController(Kevin.Controller);
     if (c == none) { return; }

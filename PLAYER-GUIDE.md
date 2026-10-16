@@ -1,158 +1,170 @@
-# Kevin Companion 0.2.3 preview — player guide
+# Kevin Companion 0.2.4 — player guide
 
-Kevin joins you automatically when his mod is selected. Start or continue a
-supported single-player world; no recruitment quest is required.
+[DOWNLOAD KEVIN SETUP](https://github.com/SimpleNeb/Subsistence-Kevin/raw/ccb4ea4111a7a682bfac44f956ed104c97e25b78/downloads/Kevin-Setup-0.2.4-preview-Alpha68.19.exe)
 
-Version 0.2.3 improves Setup's permission handling and diagnostic reports, and
-corrects installation-record reading for non-English folder names. Gameplay is
-identical to 0.2.2, including its wider gathering range. Keep the same
-[Workshop subscription](https://steamcommunity.com/sharedfiles/filedetails/?id=3816609201).
-If Kevin already works, this version adds no gameplay changes.
+Windows • Single-player • Subsistence Alpha 68.19
 
-## Install or update
+## DOWNLOAD AND INSTALL — START HERE
+https://github.com/SimpleNeb/Subsistence-Kevin
+Click DOWNLOAD KEVIN SETUP at the top of that page.
 
-1. Subscribe to the Workshop item.
-2. Close Subsistence. [Download Kevin Setup 0.2.3](https://github.com/SimpleNeb/Subsistence-Kevin/raw/6410f4b8a0c93f52f692a61817bedadcbdf0dc7e/downloads/Kevin-Setup-0.2.3-preview-Alpha68.19.exe),
-   open it, and click **Install / Update**. Use **Browse** if Setup cannot find
-   your Steam game folder. For an access-denied error, choose **Retry as
-   administrator** and approve the Windows permission prompt.
-3. Start the game, select **Kevin Companion** in the profile's **Mods** list,
-   and start or continue that profile.
+You need BOTH the Workshop subscription and Kevin Setup. Subscribing by itself
+does not install Kevin's companion code. No GitHub account is needed.
 
-Subscribing alone does not install Kevin's companion code. Setup is required,
-including when upgrading from the supported **0.1.0, 0.2.0, 0.2.1 or 0.2.2 previews**. No
-compiler or account login is needed in Setup. If you use the
-[ZIP installer](https://github.com/SimpleNeb/Subsistence-Kevin/raw/6410f4b8a0c93f52f692a61817bedadcbdf0dc7e/downloads/Kevin-Companion-0.2.3-preview-Alpha68.19.zip)
-instead, extract the complete archive and double-click **Install Kevin.cmd**.
+1. Subscribe to Kevin Companion:
+   https://steamcommunity.com/sharedfiles/filedetails/?id=3816609201
+2. Close Subsistence completely.
+3. Download the latest Kevin Setup from the link above. Open the downloaded
+   Kevin-Setup file from your browser's Downloads list or your Downloads folder.
+   You do not need GitHub's Code button or Download ZIP.
+4. Check the Subsistence folder shown in Setup. If it is blank or wrong, click
+   Browse and select the folder containing BOTH Binaries and UDKGame.
+   To find it: Steam Library → right-click Subsistence → Manage → Browse local files.
+5. Click Install / Update. Wait until Setup says “Kevin installed”.
+6. Launch Subsistence, choose your single-player profile, open that profile's
+   Mods list, and select Kevin Companion. Then start or continue that profile.
+7. Go outside onto open ground. Kevin joins you when there is a safe place
+   nearby. You do not recruit a hunter or look for a special spot on the map.
 
-**For every Kevin update, download and run the new version's installer with the
-game closed.** A Workshop update alone does not update the installed companion
-code. Keep your subscription and choose **Install / Update** in the new Setup,
-or run **Install Kevin.cmd** from the new ZIP.
+Already installed? Keep the same Workshop subscription. Download the NEW Setup,
+close the game, and click Install / Update again. Steam does not automatically
+update the installed companion code. An old Setup file installs its old version.
 
-## Talk to Kevin
+## NEW IN 0.2.4
+Recall Kevin from the HUD, even if he is dead. Firearms can now be transferred
+through his inventory, including supported native flashlight attachments.
+Installation and activation instructions are clearer. The wider gathering
+search and the installation repairs from earlier previews are included.
 
-Stand close and press your normal **Use** key to open his inventory. Crouch
-near him and press **Use** for the command menu.
+## FIND OR RECALL KEVIN
+The upper-right HUD shows Kevin's status and an “F6: RECALL KEVIN” button.
+Close other menus, press F6 to free the mouse cursor, then click the button
+when it reads “CLICK: RECALL KEVIN”. F6, Escape or right-click cancels the cursor.
 
-| Command | What Kevin does |
-| --- | --- |
-| Follow Me | Follows you and runs when he falls behind |
-| Stay Here | Waits where you leave him |
-| Inventory & Equipment | Opens his cargo, weapons and clothing |
-| Gather Wood | Chops nearby trees using a usable axe you supplied |
-| Gather Fiber | Collects nearby fiber plants; no tool required |
+Living Kevin returns beside you with his existing belongings and health.
+Recall ends his current gathering job and returns him to Follow. It does not
+create another Kevin or copy his equipment. Give a gathering order again if
+you want him to resume work.
 
-Click a command, press **1–5**, or use the arrow keys and **Enter**.
-**Escape** or right-click closes the menu. Taking damage also closes it.
+If he has died, Recall brings him back with half health and an empty inventory.
+His old equipment remains in the original death bag; recover it separately.
+The normal bag expiry still applies. Recall does not retrieve the bag's items.
 
-## Supplies, clothes and weapons
+You must be alive, and Kevin needs a clear, safe spot on outdoor surface ground.
+If recall cannot find one, move out of the cave or building, away from water
+and obstacles, and try again. The HUD explains when recall is unavailable.
 
-Kevin has **35 cargo slots, seven toolbelt slots and six clothing slots**.
-Drag items into his inventory; shift-click into Kevin is disabled. Take items
-back by dragging or shift-clicking them into your inventory when you have room.
-Put clothing and armor in their matching slots. Items containing their own
-storage cannot be placed in Kevin's inventory.
+## TALK TO KEVIN
+Stand close and press your normal Use key to open his inventory.
+Crouch and press Use near him to open the command menu:
+  Follow Me — follows you and runs when he falls behind.
+  Stay Here — waits where you leave him.
+  Inventory & Equipment — opens his cargo, weapons and clothing.
+  Gather Wood — needs a usable axe in his cargo or toolbelt.
+  Gather Fiber — collects nearby fiber plants; no tool required.
+Click a command, press 1–5, or use the arrow keys and Enter.
+Escape or right-click closes the menu. Taking damage also closes it.
 
-Put a supported firearm in his toolbelt and provide matching ammunition:
+## CARRYING, CLOTHES AND GUNS
+Kevin has 35 cargo slots, seven toolbelt slots and six clothing slots.
+Drag items into his inventory. Shift-click INTO Kevin is disabled; drag instead.
+Take items back by dragging or shift-clicking them into your inventory when you
+have room. Put clothing and armor in their matching slots.
 
-| Firearm | Ammunition Kevin can use |
-| --- | --- |
-| M9 or Red9 | 9mm rounds |
-| M37 shotgun | Shotgun shells |
-| Double-barrel shotgun | Shotgun shells or shotgun slugs |
-| Rifle or lever-action rifle | Rifle rounds |
-| Revolver | .44 rounds |
+Drag a supported gun into Kevin's toolbelt and give him matching ammunition.
+Guns can also be carried in his cargo, but equip the toolbelt for defense.
+  M9 or Red9 — 9mm rounds.
+  M37 shotgun — shotgun shells.
+  Double-barrel shotgun — shotgun shells or shotgun slugs.
+  Rifle or lever-action rifle — rifle rounds.
+  Revolver — .44 rounds.
 
-Kevin helps defend against immediate threats and reloads from his carried
-ammunition. His ammunition is finite. Explosive, incendiary and other
-unsupported weapon/ammunition combinations are not used for defense.
+Select a supported ammo type on the gun before handing it over. Kevin does not
+switch ammo types: a gun set to explosive or incendiary ammunition will not be
+used for defense, even if he also carries ordinary rounds.
 
-## Wood and fiber
+Supported guns retain their ammunition, condition and upgrades when transferred.
+The native weapon flashlight attachment is supported, including its remaining
+charge. Other containers or nested storage are not supported in Kevin's inventory.
 
-Give Kevin a usable axe in his cargo or toolbelt, then choose **Gather Wood**.
-Wood comes from actual trees and follows the player's tree-depletion record.
-Chopping wears the axe. **Gather Fiber** consumes actual nearby plants.
+He defends against immediate threats and reloads from the ammunition he actually
+carries. Ammunition is finite. Explosive, incendiary and unsupported ammunition
+combinations are not used for defense. Kevin can carry a bow and arrows, but
+bow attacks are not supported in this preview.
 
-Kevin now searches 2.5 times farther than before, centered on his current
-position whenever he chooses the next resource. He still works within a limited
-distance of you, so stay near him. The wider search helps him move through
-nearby patches; it does not make every tree or plant reachable.
+## WOOD AND FIBER
+Give Kevin a usable axe in his cargo or toolbelt for Gather Wood. Chopping wears
+the axe and follows the game's tree-depletion record. Gather Fiber consumes
+actual plants. A full cargo inventory stops gathering before consuming a resource.
 
-Gathering can stop if his cargo is full, his axe is unusable, no reachable
-resources remain in range, the route is blocked or the job becomes unsafe.
-A full cargo inventory stops gathering before a resource is consumed. If Kevin
-stops gathering and follows you, move near another patch and give the order
-again. Choose another command to change his job.
+His search is 2.5 times wider than the original preview and moves with him as
+he chooses each next resource. Stay nearby: he still works within a limited
+distance of you. A wider search does not make every resource reachable.
 
-Gathering jobs do not resume after a reload, revival or combat interruption.
-Open the command menu and give the order again.
+Blocked terrain, an unusable axe, full cargo, moving too far away, a combat
+interruption or no reachable resources can stop a job. Move near another patch
+and give the order again when needed. Jobs do not resume after loading, revival,
+recall or combat; choose Gather Wood or Gather Fiber again.
 
-## If Kevin dies
-
-His belongings stay in his dropped loot bag. **Crouch and press Use** on the
-bag to revive him nearby, or wait about **two minutes while the world is
-running** for him to return near you on safe outdoor ground. If no safe location
-is available, his return waits.
-
-He returns with half health and an empty inventory. Retrieve his original
-belongings from the bag and equip him again; revival does not duplicate them.
-**Stand and press Use** for normal looting. The game's ordinary bag expiry
-still applies, so recover valuable equipment promptly.
+## OTHER WAYS TO REVIVE KEVIN
+His belongings stay in the loot bag where he died. Stand and Use to loot it.
+Crouch and Use on the bag to revive Kevin nearby, or wait about two minutes
+while the world is running for him to return on safe outdoor ground near you.
+Both routes return him with half health and an empty inventory. No equipment
+is copied. If no safe place is available, his return waits.
 
 Saving and quitting preserves the remaining return time. The countdown pauses
-while Kevin is disabled or you are dead.
+while Kevin is disabled or you are dead. Recover valuables before the bag expires.
 
-## Saving, disabling and re-enabling
+## SAVING AND DISABLING
+Kevin's location, belongings, health and Follow/Stay order are saved with your
+profile. Give gathering orders again after loading.
 
-Kevin's location, belongings, health and follow/stay order are saved. Gathering
-orders must be given again after loading.
+To disable him for one profile, remove Kevin Companion from that profile's Mods
+selection. To disable him everywhere, close the game and choose Disable Kevin
+in Setup. This restores the original startup files and retains the compatibility
+package, mod entry and saved belongings. Install / Update enables him again.
 
-For one profile, remove Kevin Companion from that profile's Mods selection.
-For every profile, close the game and choose **Disable Kevin** in Setup, or
-double-click **Disable Kevin.cmd** from the extracted ZIP. This restores the
-original startup files and retains Kevin's compatibility package and saved
-belongings. Use **Install / Update** to enable the supported build again.
+Keep the game's .KevinLoader folder: it holds original-file backups and the
+installation record. Keep KevinCompanion.u while you have saves that use Kevin.
+The installer and disable tool do not rewrite your save files.
 
-Keep the game's `.KevinLoader` folder and `KevinCompanion.u`. The first contains
-the backups and install record; the second supplies the classes used by Kevin
-saves. The installer and disable tool do not rewrite your save files.
+## INSTALLATION HELP
+Security block or antivirus detection: stop and report the exact message,
+security product, detection name and Setup version. The installer is unsigned.
+Smart App Control can block unsigned apps and has no individual-app exception.
+This remains a distribution limitation. Do not disable protection or add an
+exclusion to install Kevin. A clean scan by one product does not settle another
+product's detection. Microsoft explains Smart App Control here:
+https://support.microsoft.com/en-us/windows/security/threat-malware-protection/smart-app-control-frequently-asked-questions
 
-## Preview limits
+Setup opens but reports game-folder access denied: choose Retry as administrator
+and approve the Windows permission prompt if you want to allow installation.
+This addresses folder permissions; it does not resolve a security block.
 
-Supported: **Windows, standalone single-player, Subsistence Alpha 68.19**.
-Following and gathering are intended for outdoor surface terrain. Following
-pauses around bases and caves. Obstacles may require repositioning or another
-order; Kevin does not teleport to catch up.
+Unsupported version or checksum mismatch: save the report. Do not force a patch
+over different game files. After a game update, use a matching Kevin release.
 
-Multiplayer, building jobs and taking direct control of Kevin as the player
-character are not included. This preview has not had a long public playtest
-across every terrain, enemy, weapon or combination of mods.
+For other errors, click Save setup report… and include that text when reporting
+the issue. Setup also keeps reports under %LOCALAPPDATA%\KevinCompanion\Logs.
+If Setup never opens, include a screenshot of the warning instead. Reports
+contain local folder paths; remove personal information before posting publicly.
+Reports and player guide: https://github.com/SimpleNeb/Subsistence-Kevin
 
-Setup refuses unsupported game versions and conflicting file changes. After a
-game update, use a Kevin release that supports that build. Setup is unsigned;
-use the supplied checksums to identify the release you downloaded.
+## FRANÇAIS — ACTIVER KEVIN
+Abonnez-vous sur le Workshop, fermez le jeu, puis lancez Kevin Setup et cliquez
+sur Install / Update. Relancez Subsistence, ouvrez Mods dans votre profil solo,
+sélectionnez Kevin Companion et chargez la partie. Sortez sur un terrain dégagé :
+Kevin apparaît près de vous. Debout + Use : inventaire ; accroupi + Use : ordres.
+Pour le rappeler, fermez les autres menus, appuyez sur F6 et cliquez sur
+RECALL KEVIN en haut à droite. S'il est mort, son équipement reste dans son sac.
 
-This is an unofficial community mod, not affiliated with Subsistence's developer.
-See [build and validation details](BUILD-PROOF.md) for the checks and their scope.
+## PREVIEW LIMITS
+Windows, standalone single-player, Subsistence Alpha 68.19. Multiplayer,
+building jobs and direct player control of Kevin are not included. Following
+and gathering are for outdoor surface terrain; bases, caves and obstacles remain
+limitations. Recall is manual; ordinary following does not teleport him.
+This is a controlled preview, not a long public playtest of every terrain,
+enemy, weapon or combination of mods. See VALIDATION.txt for the checks performed.
 
-## If installation fails
-
-Keep Subsistence closed. Use **Browse** to select its folder containing
-`Binaries` and `UDKGame`. If Windows denies access, **Retry as administrator**
-reopens the same installer with your selected folder and action. Canceling the
-Windows permission prompt leaves Setup open so you can retry later.
-
-For other failures, click **Save setup report...**. Setup also saves reports in
-`%LOCALAPPDATA%\KevinCompanion\Logs`. Reports include local folder paths;
-review those before posting them publicly. Include the report, Kevin version
-and game build when reporting an issue.
-
-The ZIP fallback uses the same loader scripts. If its command window reports
-access denied, right-click **Install Kevin.cmd** and choose **Run as administrator**.
-Setup is recommended for its folder picker, retry button and saved reports.
-
-A game-version/checksum error needs a matching supported game build. Keep the
-`.KevinLoader` backups when a previous installation exists; do not force a
-patch over changed files. These improvements address reproduced installer
-issues, but an unfamiliar error still needs its report for diagnosis.
+Kevin is an unofficial community mod, not affiliated with Subsistence's developer.

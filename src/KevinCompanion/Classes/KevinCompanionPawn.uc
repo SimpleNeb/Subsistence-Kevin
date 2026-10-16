@@ -218,6 +218,9 @@ function FillDroppedGear(ColdLootContainer droppedGear)
         if (item == none) { continue; }
         manager.AddItemToInvArray(none, class'ColdInventoryItemUtils'.static.MakeInvSlotInfo(i));
         droppedGear.AM.AddInvItem(item, dropSlot);
+        // Unopened native containers set only the outer item's owner. Move
+        // its attachment ownership too before the dead pawn is retired.
+        item._SetOwner(droppedGear);
     }
     // A failed commit retains items in the module; transfer those too only into
     // empty death-container slots, never overwrite a conflicting destination.
@@ -227,6 +230,7 @@ function FillDroppedGear(ColdLootContainer droppedGear)
             if (item == none || droppedGear.AM.GetInvItem(i) != none) { continue; }
             KevinInventory.Items[i] = none;
             droppedGear.AM.AddInvItem(item, i);
+            item._SetOwner(droppedGear);
         }
     }
     // An external mod could still place an item in the reserved human slot.
@@ -236,15 +240,23 @@ function FillDroppedGear(ColdLootContainer droppedGear)
     if (item != none) {
         manager.AddItemToInvArray(none, class'ColdInventoryItemUtils'.static.MakeInvSlotInfo(42));
         droppedGear.AM.AddItemToInventory(item);
+        if (item.Owner == droppedGear) { item._SetOwner(droppedGear); }
     }
 }
 
 simulated function Destroyed()
 {
+    local ColdInventoryItem_WeaponAttachment_Flashlight attachment;
     if (KevinOrdersMenu != none) { KevinOrdersMenu.CloseMenu(); }
     CloseKevinInventory();
     if (KevinInventory != none) { KevinInventory.Destroy(); }
     KevinInventory = none;
+    // Native firearm item destruction does not destroy its stored attachments.
+    // Remove only leaf items still owned by this retiring pawn. Normal death
+    // already transferred the gun and flashlight ownership to the loot bag.
+    foreach ChildActors(class'ColdInventoryItem_WeaponAttachment_Flashlight', attachment) {
+        if (attachment.Owner == self) { attachment.Destroy(); }
+    }
     super.Destroyed();
 }
 

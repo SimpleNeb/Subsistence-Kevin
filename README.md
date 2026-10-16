@@ -1,117 +1,145 @@
-![Kevin Companion illustrated cover](artwork/preview.jpg)
-
 # Kevin Companion for Subsistence
 
-**0.2.3 preview · Subsistence Alpha 68.19 · Windows · Single-player**
+## [DOWNLOAD KEVIN SETUP — CLICK HERE](https://github.com/SimpleNeb/Subsistence-Kevin/raw/ccb4ea4111a7a682bfac44f956ed104c97e25b78/downloads/Kevin-Setup-0.2.4-preview-Alpha68.19.exe)
 
-A friend for the wilderness. Kevin joins you automatically, carries the supplies
-you cannot leave behind, wears the gear you give him, and helps defend against
-immediate threats. Send him to gather nearby wood or fiber while you work.
+**0.2.4 preview · Windows · Single-player · Subsistence Alpha 68.19**
 
-Version **0.2.3 improves installation on another PC**. Setup offers an
-administrator retry when Windows denies access, keeps your selected game folder,
-and saves a report for troubleshooting. Installation records now handle accented
-and other non-English folder names correctly.
+**Subscribe AND run Setup. Both steps are required.** Steam subscription alone
+does not install Kevin's companion code.
 
-Kevin's gameplay is unchanged from 0.2.2, including the wider gathering search.
-If Kevin already works, there is no gameplay update you need to install.
+1. **[Subscribe on Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3816609201).**
+2. **Close Subsistence completely.**
+3. **Download Kevin Setup using the link above.** Open the downloaded
+   `Kevin-Setup-…exe` from your browser's Downloads list or your Downloads folder.
+   No GitHub account is needed. You do not need the **Code / Download ZIP** button.
+4. **Click Install / Update.** Check the game folder first. If it is blank or
+   wrong, use **Browse…** to select the Subsistence folder containing **Binaries**
+   and **UDKGame**. Steam Library → right-click Subsistence → **Manage → Browse
+   local files** shows that folder. Wait for **Kevin installed**.
+5. **Launch Subsistence → choose your single-player profile → open its Mods
+   list → select Kevin Companion → start or continue that profile.**
+6. **Go outside onto open ground.** Kevin appears nearby when a safe place is
+   available. No recruitment quest and no special location on the map.
 
-## Install
+**Already installed?** Keep your subscription. Download the **new** Setup, close
+the game, and click **Install / Update** again. Steam does not automatically
+update the installed companion code. The supported earlier previews from 0.1.0
+through 0.2.3 can be upgraded with this installer.
 
-1. [Subscribe to Kevin Companion on Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3816609201).
-2. Close Subsistence. [Download Kevin Setup 0.2.3](https://github.com/SimpleNeb/Subsistence-Kevin/raw/6410f4b8a0c93f52f692a61817bedadcbdf0dc7e/downloads/Kevin-Setup-0.2.3-preview-Alpha68.19.exe),
-   open it, and choose **Install / Update**. Setup finds your Steam game folder;
-   choose **Browse** if needed. If access is denied, click **Retry as administrator**
-   and approve the Windows permission prompt.
-3. Start Subsistence, select **Kevin Companion** in your profile's **Mods** list,
-   and start or continue that profile. Kevin needs no recruitment quest.
+Prefer a complete ZIP installer? [Download the 0.2.4 installer ZIP](https://github.com/SimpleNeb/Subsistence-Kevin/raw/ccb4ea4111a7a682bfac44f956ed104c97e25b78/downloads/Kevin-Companion-0.2.4-preview-Alpha68.19.zip),
+extract the entire archive, and run **Install Kevin.cmd**. Use Setup or the ZIP;
+you do not need both. The repository's source ZIP is a different download.
 
-**The Setup step is required.** A Workshop subscription alone cannot install
-Kevin's companion code. **For every Kevin update, download and run that
-version's new Setup with the game closed, then choose Install / Update.** Steam
-does not update the installed companion code for you. You do not need to compile
-anything or enter account credentials into the installer.
+## A friend for the wilderness
 
-Already using the supported **0.1.0, 0.2.0, 0.2.1 or 0.2.2 preview**? Close the game and run
-the new Setup's **Install / Update**. It preserves the required backups and
-compatibility package. The installer does not rewrite your saves.
+Kevin joins you automatically, carries supplies, wears the gear you give him
+and helps defend against immediate threats. Send him to gather wood or fiber,
+leave him to wait, or bring him along for company on the trail.
 
-Prefer a ZIP? [Download the 0.2.3 ZIP installer](https://github.com/SimpleNeb/Subsistence-Kevin/raw/6410f4b8a0c93f52f692a61817bedadcbdf0dc7e/downloads/Kevin-Companion-0.2.3-preview-Alpha68.19.zip),
-extract the complete archive, and double-click **Install Kevin.cmd**. Use either
-Setup or the ZIP; you do not need both.
+![Kevin Companion illustrated cover](artwork/preview.jpg)
 
-## Spend a day with Kevin
+## New in 0.2.4
+
+- **Recall Kevin from the HUD.** Close other menus, press **F6** to free your
+  cursor, then click **RECALL KEVIN** in the upper-right corner. The HUD also
+  shows his status. F6, Escape or right-click cancels the cursor.
+- **Recall works after his death.** Living Kevin keeps his health and belongings.
+  Dead Kevin returns at half health with an empty inventory. **His equipment
+  remains in his original death bag**; recover it separately before normal bag
+  expiry. Recall resumes Follow and cancels his current gathering job.
+- **Firearms transfer through his inventory.** Supported guns retain loaded
+  ammunition, condition, upgrades and the native flashlight attachment's charge.
+  Drag a gun into his toolbelt and supply matching ordinary ammunition.
+  Select a supported ammo type on the gun before handing it over; Kevin does
+  not switch ammo types for you.
+- **Clearer installation and activation instructions**, including a short
+  French explanation below. Previous gathering-range and installer repairs
+  are included.
+
+Recall needs a living player and a clear, safe spot on outdoor surface ground.
+If the HUD reports that recall is unavailable, close other menus and move away
+from caves, buildings, water or obstacles before trying again.
+
+## Quick controls
 
 | What you want to do | Control |
 | --- | --- |
-| Open his inventory | Stand nearby and press your normal **Use** key |
-| Give an order | Crouch nearby and press **Use** |
-| Choose a command | Click, press **1–5**, or use the arrows and **Enter** |
-| Close the menu | **Escape** or right-click |
-| Revive him from his dropped bag | Crouch by the bag and press **Use** |
-| Loot his dropped bag | Stand by the bag and press **Use** |
+| Open Kevin's inventory | Stand close and press your normal **Use** key |
+| Give him an order | Crouch close and press **Use** |
+| Choose a command | Click, press **1–5**, or use arrows and **Enter** |
+| Recall him | Close other menus, press **F6**, then click **RECALL KEVIN** |
+| Close the command menu or recall cursor | **Escape**, right-click; **F6** also closes recall cursor |
+| Revive him at his dropped bag | Crouch by the bag and press **Use** |
+| Loot the dropped bag | Stand by the bag and press **Use** |
 
 ![Kevin's five-command menu in Subsistence](artwork/Kevin-Command-Menu.png)
 
-His commands are **Follow Me**, **Stay Here**, **Inventory & Equipment**,
-**Gather Wood**, and **Gather Fiber**. Wood gathering needs a usable axe;
-fiber gathering needs no tool. Axes wear, trees deplete and plants are picked.
-Stay nearby while he works. Full cargo, an unusable axe, blocked routes or no
-reachable resources in range can still end a job. Move near another patch and
-give the gathering order again when needed. Repeat the order after a reload,
-revival or combat interruption.
+Kevin has **35 cargo slots, seven toolbelt slots and six clothing slots**.
+Drag items into him; shift-click into Kevin is disabled. Supported defensive
+guns are M9, Red9, M37, double-barrel shotgun, rifle, lever-action rifle and
+revolver. Supply matching ordinary ammunition. He can carry bows and arrows,
+but bow attacks are not supported.
 
-Kevin offers **35 cargo slots**, plus weapon and clothing slots. Give him a
-supported firearm and matching ammunition: he uses what he actually carries.
-Drag items into his inventory; shift-clicking items into Kevin is disabled.
+Wood gathering requires a usable axe; fiber needs no tool. His search moves
+with him and is 2.5 times wider than the original preview. Stay nearby. Tools
+wear, ammunition runs out, plants are picked and full cargo stops gathering.
+Terrain and combat can interrupt jobs. Give gathering orders again after
+loading, revival, recall or combat.
 
-If he dies, his belongings stay in his bag. Revive him there or wait about two
-minutes while the world is running for his return on safe outdoor ground.
-He returns with half health and an empty inventory, so recover and re-equip
-his belongings. The game's normal loot-bag expiry still applies.
+Read the [complete player guide](PLAYER-GUIDE.md) for ammunition, attachments,
+gathering, revival, saving and disabling Kevin.
 
-Read the [player guide](PLAYER-GUIDE.md) for weapons, equipment, gathering,
-revival and save behavior.
+## Windows or antivirus blocked it?
 
-## Disable and compatibility
+**Kevin Setup is unsigned.** Smart App Control can block unsigned apps and has
+no individual-app exception. This remains a distribution limitation. Keep your
+protection enabled; do not add an exclusion to install Kevin. A successful scan
+by one security product does not settle another product's detection.
+[Microsoft explains Smart App Control](https://support.microsoft.com/en-us/windows/security/threat-malware-protection/smart-app-control-frequently-asked-questions).
 
-Remove Kevin from one profile's Mods selection to disable him there. To disable
+Please [report the exact warning](https://github.com/SimpleNeb/Subsistence-Kevin/issues),
+security product, detection name and Setup version. We cannot diagnose a report
+such as “ten detections” without knowing which file and detections were reported.
+The ZIP installer is not a security-block workaround.
+
+**Setup opens but says access denied to the game folder?** Its **Retry as
+administrator** button requests Windows permission to change that folder. This
+addresses folder permissions, not a security block.
+
+For other installation errors, click **Save setup report…**. If Setup never
+opens, include a screenshot of the warning instead. Reports contain local
+folder paths; remove personal information before posting publicly. For a
+game-version or checksum mismatch, keep the backups and do not force a patch.
+
+## Français — activer Kevin
+
+Abonnez-vous sur le Workshop, fermez le jeu, puis lancez **Kevin Setup** avec le
+lien en haut et cliquez sur **Install / Update**. Relancez Subsistence, ouvrez
+**Mods** dans votre profil solo, sélectionnez **Kevin Companion**, puis chargez
+la partie. Sortez sur un terrain dégagé : Kevin apparaît près de vous.
+
+Debout + **Use** : inventaire ; accroupi + **Use** : ordres. Pour le rappeler,
+fermez les autres menus, appuyez sur **F6** et cliquez sur **RECALL KEVIN** en haut
+à droite. S'il est mort, son équipement reste dans son sac.
+
+## Compatibility and disabling
+
+To disable Kevin for one profile, remove him from its Mods selection. To disable
 him everywhere, close the game and choose **Disable Kevin** in Setup. Keep the
-game's `.KevinLoader` folder and `KevinCompanion.u`; existing Kevin saves need
-his saved classes and the installer needs its original-file backups.
+game's `.KevinLoader` folder and `KevinCompanion.u`: the installer needs its
+original-file backups and existing Kevin saves need his saved classes.
 
-This is an outdoor companion preview for **Alpha 68.19**. Bases, caves, terrain
-and obstacles can interrupt movement or gathering. There is no teleport catch-up.
-Multiplayer, building jobs and direct player control of Kevin are not included.
-Setup refuses unsupported game builds and conflicting file changes.
+This preview supports **Windows, standalone single-player, Alpha 68.19**.
+Following, gathering and recall need suitable outdoor surface terrain. Bases,
+caves and obstacles remain limitations. Ordinary following does not teleport
+him. Multiplayer, building jobs and direct player control are not included.
 
-[Build and validation details](BUILD-PROOF.md) distinguish the inherited gameplay
-checks from this release's installer checks. Setup is an unsigned community
-preview; SHA256 checksums accompany the downloads. Report issues with your game
-build and Kevin version.
+[Build and validation details](BUILD-PROOF.md) distinguish fresh checks from
+inherited evidence. This is a controlled preview, not a long public playtest of
+every terrain, weapon, enemy or combination of mods. SHA256 checksums identify
+the exact downloads; they are not a publisher signature.
 
-Created by **SimpleNeb**. Unofficial and not affiliated with Subsistence's
-developer. The cover is an illustration; the menu image is a gameplay screenshot.
-You need your own copy of Subsistence. Original game files and the SDK are not
-distributed with this project.
-
-## If installation fails
-
-Keep Subsistence closed. Use **Browse** to select its folder containing
-`Binaries` and `UDKGame`. If Windows denies access, **Retry as administrator**
-reopens the same installer with your selected folder and action. Canceling the
-Windows permission prompt leaves Setup open so you can retry later.
-
-For other failures, click **Save setup report...**. Setup also saves reports in
-`%LOCALAPPDATA%\KevinCompanion\Logs`. Reports include local folder paths;
-review those before posting them publicly. Include the report, Kevin version
-and game build when reporting an issue.
-
-The ZIP fallback uses the same loader scripts. If its command window reports
-access denied, right-click **Install Kevin.cmd** and choose **Run as administrator**.
-Setup is recommended for its folder picker, retry button and saved reports.
-
-A game-version/checksum error needs a matching supported game build. Keep the
-`.KevinLoader` backups when a previous installation exists; do not force a
-patch over changed files. These improvements address reproduced installer
-issues, but an unfamiliar error still needs its report for diagnosis.
+Created by **SimpleNeb**. Unofficial; not affiliated with Subsistence's developer.
+The cover is an illustration; the command-menu image is a gameplay screenshot.
+You need your own copy of Subsistence. Original game files, SDK, test packages
+and saves are not distributed with this project.

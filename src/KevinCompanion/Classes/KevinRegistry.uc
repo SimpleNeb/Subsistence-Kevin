@@ -29,6 +29,119 @@ var float RevivalLastTick;
 var int DeathGeneration;
 var KevinRevivalBag DeathBag;
 
+event PostBeginPlay()
+{
+    super.PostBeginPlay();
+    // The local HUD belongs to the registry, so it survives Kevin's death and
+    // is rebound when the player respawns or receives a new native HUD.
+    SetTimer(1.0, true, 'EnsureRecallHud');
+}
+
+function EnsureRecallHud()
+{
+    local KevinCommandMenu menu;
+    local ColdPlayerController pc;
+    if (!bInitialized || bShuttingDown || !IsRuntimeEnabled() || HasAnotherRegistry()) { return; }
+    pc = FindCompanionOwner();
+    if (pc == none || pc.Pawn == none || pc.Pawn.Health <= 0 || pc.MyHUD == none ||
+        LocalPlayer(pc.Player) == none || ColdPlayerPawn(pc.Pawn) == none) { return; }
+    foreach DynamicActors(class'KevinCommandMenu', menu) {
+        if (menu.bRecallHud && menu.RecallRegistry == self && !menu.bDeleteMe) {
+            if (menu.PlayerRef == pc && menu.HudRef == pc.MyHUD) { return; }
+            menu.CloseMenu();
+        }
+    }
+    menu = Spawn(class'KevinCommandMenu', self);
+    if (menu != none && !menu.InitializeRecallHud(self, pc)) { menu.Destroy(); }
+}
+
+function string GetRecallStatus()
+{
+    if (bRestoreFailed) { return "Needs a compatible update"; }
+    if (bRestorePending) { return "Restoring Kevin..."; }
+    if (bCompanionDead) { return "Down - return in " $ string(GetRevivalSecondsRemaining()) $ "s"; }
+    if (CompanionPawn == none || CompanionPawn.Health <= 0) { return "Kevin unavailable"; }
+    if (Companion != none) {
+        if (Companion.GetGatheringOrder() == 'Wood') { return "Gathering wood"; }
+        if (Companion.GetGatheringOrder() == 'Fiber') { return "Gathering fiber"; }
+        return Companion.GetFollowingOrder() ? "Following" : "Staying";
+    }
+    return "Kevin is alive";
+}
+
+function bool IsRecallPlayerUiReady(ColdPlayerController pc)
+{
+    // Native pause/map/chat/stats views do not all set the pawn's bInHud.
+    return pc != none && pc.GetPlayerPawn() != none && pc.GetHudWrapper() != none &&
+        !pc.GetPlayerPawn().bInHud && !pc.bCinematicMode && !pc.IsInMenu() &&
+        !pc.GetHudWrapper().IsPlayerInMapView() && !pc.IsPlayerTextChatting() &&
+        !pc.GetHudWrapper().IsPlayerInServerStatsView();
+}
+
+function bool RequestRecall(ColdPlayerController pc, out string reason)
+{
+    local ColdGame game;
+    local KevinCompanionPawn p;
+    local KevinDefensiveHunterController defensive;
+    local vector candidate;
+    local rotator direction;
+    local int ring, spoke;
+    game = ColdGame(WorldInfo.Game);
+    if (Role != ROLE_Authority || WorldInfo.NetMode != NM_Standalone || !bInitialized ||
+        bShuttingDown || bRevivalBusy || bRestorePending || bRestoreFailed ||
+        !IsRuntimeEnabled() || HasAnotherRegistry() || game == none || game.bIsLoadingSaveGame ||
+        game.LoadingSaveGameState != none || game.bGameEnding || pc == none ||
+        pc != FindCompanionOwner() || pc.GetPlayerPawn() == none || pc.Pawn.bDeleteMe || pc.Pawn.Health <= 0) {
+        reason = "Kevin cannot be recalled while the world or player is not ready."; return false;
+    }
+    if (!IsRecallPlayerUiReady(pc)) { reason = "Close the inventory, map, or other menu first."; return false; }
+    if (pc.GetPlayerPawn().IsInCave() || pc.GetPlayerPawn().IsInLavaCave()) {
+        reason = "Go outside onto clear ground to recall Kevin safely."; return false;
+    }
+    if (bCompanionDead) {
+        if (TryReviveNear(pc, false)) {
+            reason = "Kevin is back. His equipment is still in the bag where he fell."; return true;
+        }
+        reason = "No safe space here. Move onto clear ground and try again."; return false;
+    }
+    p = KevinCompanionPawn(CompanionPawn);
+    if (p == none || p.bDeleteMe || p.Health <= 0 || Companion == none || Companion.bDeleteMe ||
+        p.Controller != Companion || Companion.Pawn != p || p.IsKevinInventoryBusy()) {
+        reason = "Kevin is busy or his saved record is unavailable. Close his inventory and try again."; return false;
+    }
+    bRevivalBusy = true;
+    // Same pawn and inventory; never Spawn or deserialize an alive Kevin.
+    for (ring = 0; ring < 3; ring++) {
+        for (spoke = 0; spoke < 8; spoke++) {
+            direction.Yaw = pc.Pawn.Rotation.Yaw + spoke * 8192;
+            candidate = pc.Pawn.Location + vector(direction) * (180 + ring * 150);
+            candidate = class'ColdPositionHelper'.static.GetPathingLocationFromLoc(
+                pc.Pawn, candidate, true, 300, false, false, false, false);
+            if (candidate == vect(0,0,0) || Abs(candidate.Z - pc.Pawn.Location.Z) > 200 ||
+                !pc.Pawn.FastTrace(candidate, pc.Pawn.Location)) { continue; }
+            // SetLocation and cancellation are synchronous: no gathering tick
+            // can run between them. A blocked move leaves the old order intact.
+            if (!p.SetLocation(candidate)) { continue; }
+            Companion.CancelGathering(false);
+            defensive = KevinDefensiveHunterController(Companion);
+            if (defensive != none) {
+                defensive.EndDefense(); defensive.DamageThreat = none; defensive.DamageThreatUntil = 0;
+            }
+            Companion.TargetPawn = none; Companion.Enemy = none; Companion.Focus = none;
+            Companion.CompanionOwner = pc;
+            Companion.SetFollowing(true);
+            p.Velocity = vect(0,0,0); p.Acceleration = vect(0,0,0);
+            bRevivalBusy = false;
+            reason = "Kevin is beside you and following. His inventory is unchanged.";
+            LogInternal("KEVIN RECALL COMPLETE pawn=" $ string(p) $ " generation=" $ string(DeathGeneration));
+            return true;
+        }
+    }
+    bRevivalBusy = false;
+    reason = "No safe space here. Move onto clear ground and try again.";
+    return false;
+}
+
 // The bypass exists only on a registry owned by a live disposable fixture,
 // itself owned by an explicitly enabled test-mutator session. Never serialized.
 function bool AuthorizeIsolatedFixture(Actor fixture)
@@ -474,7 +587,7 @@ function Deserialize(JsonObject data)
 
 function bool ValidateInventoryRecord(JsonObject inventory, int slots)
 {
-    local int i, itemId;
+    local int i;
     local JsonObject itemRecord;
     if (inventory == none || slots <= 0 || slots > 49) { return false; }
     // The native 48-slot UI reserves human belt slot42. Retain an incompatible
@@ -483,14 +596,7 @@ function bool ValidateInventoryRecord(JsonObject inventory, int slots)
     for (i = 0; i < slots; i++) {
         itemRecord = inventory.GetObject(string(i));
         if (itemRecord == none) { continue; }
-        // Container-within-item restoration needs its own bounded validation.
-        // Ordinary hunter kits have no nested item storage; retain rather than lose
-        // an unsupported saved record if one is introduced by another mod later.
-        if (itemRecord.GetObject("si") != none) { return false; }
-        itemId = itemRecord.GetIntValue("~");
-        if (itemId < 0 || itemId >= class'ColdInvItemList'.default.ItemList.Length ||
-            class'ColdInvItemList'.default.ItemList[itemId] == none ||
-            itemRecord.GetIntValue("c") - itemId <= 0) { return false; }
+        if (!class'KevinAccessModule'.static.ValidateSupportedItemRecord(itemRecord)) { return false; }
     }
     return true;
 }
@@ -622,7 +728,12 @@ function NotifyControllerDestroyed(KevinHunterController controller)
 
 simulated function Destroyed()
 {
+    local KevinCommandMenu menu;
     bShuttingDown = true;
+    ClearTimer('EnsureRecallHud');
+    foreach DynamicActors(class'KevinCommandMenu', menu) {
+        if (menu.bRecallHud && menu.RecallRegistry == self && !menu.bDeleteMe) { menu.CloseMenu(); }
+    }
     ClearTimer('RestoreWhenReady');
     ClearTimer('RevivalTick');
     CleanupSpawnedPawn(CompanionPawn, Companion);

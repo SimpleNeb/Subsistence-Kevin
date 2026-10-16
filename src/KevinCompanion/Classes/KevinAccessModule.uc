@@ -171,7 +171,71 @@ function VerifyAccess()
     }
 }
 
-// Reject unsupported nested inventories before taking possession of the item.
+// Native firearms use two item-storage slots for attachments. These are not
+// arbitrary containers: permit the shipped guns and their leaf flashlights,
+// while retaining the fail-closed rule for other nested inventories.
+static function bool IsSupportedAttachmentWeapon(class<ColdInventoryItem> itemClass)
+{
+    return itemClass == class'ColdInventoryItem_M9' || itemClass == class'ColdInventoryItem_Red9' ||
+        itemClass == class'ColdInventoryItem_Revolver' || itemClass == class'ColdInventoryItem_Rifle' ||
+        itemClass == class'ColdInventoryItem_RifleLeverAction' ||
+        itemClass == class'ColdInventoryItem_ShotgunM37' ||
+        itemClass == class'ColdInventoryItem_ShotgunDoubleBarrel';
+}
+
+static function bool HasSupportedItemStorage(ColdInventoryItem item)
+{
+    local array<ColdInventoryItem> stored;
+    local ColdInventoryItem attachment;
+    local int i, j;
+    if (item == none || item.bDeleteMe) { return false; }
+    if (ColdInterfaceInventoryItemStorage(item) == none) { return true; }
+    if (!IsSupportedAttachmentWeapon(item.Class) || item.Count != 1) { return false; }
+    stored = ColdInterfaceInventoryItemStorage(item).GetStorageItems();
+    if (stored.Length != 2) { return false; }
+    for (i = 0; i < stored.Length; i++) {
+        attachment = stored[i];
+        if (attachment == none) { continue; }
+        if (attachment.bDeleteMe || attachment.Class != class'ColdInventoryItem_WeaponAttachment_Flashlight' ||
+            attachment.Count != 1 || attachment.Owner != item.Owner ||
+            attachment.InvSlotInfo.InvTypeId != 2 || attachment.InvSlotInfo.ParentItem != item ||
+            attachment.InvSlotInfo.SlotId != i || ColdInterfaceInventoryItemStorage(attachment) != none) { return false; }
+        for (j = 0; j < i; j++) { if (stored[j] == attachment) { return false; } }
+    }
+    return true;
+}
+
+// Bound the only nested records we restore to the same two native attachment
+// slots. Comparing the reconstructed storage object also rejects unknown keys,
+// rather than silently dropping unsupported saved contents during Deserialize.
+static function bool ValidateSupportedItemRecord(JsonObject itemRecord)
+{
+    local int itemId, attachmentId, i;
+    local JsonObject storageRecord, attachmentRecord, supportedStorage;
+    if (itemRecord == none) { return false; }
+    itemId = itemRecord.GetIntValue("~");
+    if (itemId < 0 || itemId >= class'ColdInvItemList'.default.ItemList.Length ||
+        class'ColdInvItemList'.default.ItemList[itemId] == none ||
+        itemRecord.GetIntValue("c") - itemId <= 0) { return false; }
+    storageRecord = itemRecord.GetObject("si");
+    if (storageRecord == none) { return true; }
+    if (!IsSupportedAttachmentWeapon(class'ColdInvItemList'.default.ItemList[itemId]) ||
+        itemRecord.GetIntValue("c") - itemId != 1) { return false; }
+    supportedStorage = new class'JsonObject';
+    for (i = 0; i < 2; i++) {
+        attachmentRecord = storageRecord.GetObject(string(i));
+        if (attachmentRecord == none) { continue; }
+        attachmentId = attachmentRecord.GetIntValue("~");
+        if (attachmentId != class'ColdInventoryItem_WeaponAttachment_Flashlight'.default.ItemId ||
+            attachmentId < 0 || attachmentId >= class'ColdInvItemList'.default.ItemList.Length ||
+            class'ColdInvItemList'.default.ItemList[attachmentId] != class'ColdInventoryItem_WeaponAttachment_Flashlight' ||
+            attachmentRecord.GetIntValue("c") - attachmentId != 1 ||
+            attachmentRecord.GetObject("si") != none) { return false; }
+        supportedStorage.SetObject(string(i), attachmentRecord);
+    }
+    return class'JsonObject'.static.EncodeJson(storageRecord) == class'JsonObject'.static.EncodeJson(supportedStorage);
+}
+
 // Keep normal slot restrictions and prevent two worn items of the same category.
 simulated function bool CheckCanMoveItemToSlot(ColdInventoryItem item, byte slotId, byte invType)
 {
@@ -181,7 +245,7 @@ simulated function bool CheckCanMoveItemToSlot(ColdInventoryItem item, byte slot
     p = KevinCompanionPawn(OriginalOwner);
     if (!bStaged || bCommitting || p == none || p.GetPlayerInvMgr() == none ||
         slotId >= 48 || item == none || item.bDeleteMe ||
-        ColdInterfaceInventoryItemStorage(item) != none) { return false; }
+        !HasSupportedItemStorage(item)) { return false; }
     if (!p.GetPlayerInvMgr().CheckCanMoveItemToSlot(item,
         class'ColdInventoryItemUtils'.static.MakeInvSlotInfo(PawnSlotForAccessSlot(slotId)))) { return false; }
     if (p.GetPlayerInvMgr().IsClothingSlot(PawnSlotForAccessSlot(slotId))) {

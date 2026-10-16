@@ -1,4 +1,5 @@
-// Player-local input routing; attached only while Kevin's command menu is open.
+// Player-local command menu and opt-in recall cursor. A closed recall HUD
+// passes normal gameplay input through unchanged.
 class KevinMenuInput extends Interaction;
 
 var KevinCommandMenu Menu;
@@ -6,9 +7,26 @@ var KevinCommandMenu Menu;
 function bool HandleKey(int ControllerId, name Key, EInputEvent EventType,
     optional float AmountDepressed = 1.0, optional bool bGamepad)
 {
-    if (Menu == none || !Menu.bOpen || Menu.PlayerRef == none ||
+    if (Menu == none || Menu.PlayerRef == none ||
         LocalPlayer(Menu.PlayerRef.Player) == none ||
         ControllerId != LocalPlayer(Menu.PlayerRef.Player).ControllerId) { return false; }
+    if (Menu.bRecallHud) {
+        // A native modal can pause world ticks. Release our cursor on input
+        // as well, so it never intercepts that menu while waiting for Tick.
+        if (Menu.bRecallCursor && !Menu.CanUseRecallHud()) { Menu.SetRecallCursor(false); return false; }
+        if (Key == 'F6' && EventType == IE_Pressed) {
+            if (Menu.bRecallCursor) { Menu.SetRecallCursor(false); return true; }
+            return Menu.SetRecallCursor(true);
+        }
+        if (!Menu.bRecallCursor || EventType == IE_Released) { return false; }
+        if (EventType != IE_Pressed) { return true; }
+        if (Key == 'Escape' || Key == 'RightMouseButton' || Key == 'XboxTypeS_B') {
+            Menu.SetRecallCursor(false); return true;
+        }
+        if (Key == 'LeftMouseButton' && Menu.HitRecall(Menu.CursorX, Menu.CursorY)) { Menu.ExecuteRecall(); }
+        return true;
+    }
+    if (!Menu.bOpen) { return false; }
     // Let released movement/crouch keys clear their normal held state.
     if (EventType == IE_Released) { return false; }
     if (EventType != IE_Pressed && EventType != IE_Repeat) { return true; }
@@ -41,9 +59,10 @@ function bool HandleAxis(int ControllerId, name Key, float Delta, float DeltaTim
     optional bool bGamepad)
 {
     local int hover;
-    if (Menu == none || !Menu.bOpen || Menu.PlayerRef == none ||
+    if (Menu == none || (!Menu.bOpen && !Menu.bRecallCursor) || Menu.PlayerRef == none ||
         LocalPlayer(Menu.PlayerRef.Player) == none ||
         ControllerId != LocalPlayer(Menu.PlayerRef.Player).ControllerId) { return false; }
+    if (Menu.bRecallHud && !Menu.CanUseRecallHud()) { Menu.SetRecallCursor(false); return false; }
     if (Key == 'MouseX') { Menu.CursorX = FClamp(Menu.CursorX + Delta, 0, Menu.ViewWidth - 1); }
     else if (Key == 'MouseY') { Menu.CursorY = FClamp(Menu.CursorY - Delta, 0, Menu.ViewHeight - 1); }
     if (Key == 'MouseX' || Key == 'MouseY') {
@@ -55,7 +74,10 @@ function bool HandleAxis(int ControllerId, name Key, float Delta, float DeltaTim
 
 function bool HandleChar(int ControllerId, string Unicode)
 {
-    return Menu != none && Menu.bOpen && Menu.PlayerRef != none &&
+    if (Menu != none && Menu.bRecallHud && Menu.bRecallCursor && !Menu.CanUseRecallHud()) {
+        Menu.SetRecallCursor(false); return false;
+    }
+    return Menu != none && (Menu.bOpen || Menu.bRecallCursor) && Menu.PlayerRef != none &&
         LocalPlayer(Menu.PlayerRef.Player) != none &&
         ControllerId == LocalPlayer(Menu.PlayerRef.Player).ControllerId;
 }

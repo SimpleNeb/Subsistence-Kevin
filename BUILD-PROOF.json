@@ -1,21 +1,22 @@
 {
   "format": "kevin-public-build-proof-v1",
   "releaseStatus": "VALIDATED",
-  "version": "0.2.3-preview",
-  "buildId": "alpha68.19-preview-installer-023",
-  "releaseKind": "scoped-installer-hotfix",
-  "archiveSha256": "402d9789cf9c33dde6b4023e29ab42ffba35b2c5e9dd5ffe2b4f10a1f3d45caa",
-  "setupSha256": "5de7d4f8355b72511981671c8540e3937610b1913990d85e74baf8b37db29f08",
-  "manifestSha256": "938dc455b1c1987adfa24cfeae52aff68b68d1a1ba1419df991cc38ac4811b96",
-  "productionSha256": "c23d1f377c329adf2dadd95132be192c0066a72fd04a049a8042cc040043f4bb",
-  "installedGameplayAndMetadataByteIdenticalTo": "0.2.2-preview",
-  "frozenSourceManifestSha256": "4a47c2edf9067a1aeab3661d2782c05481c3dc0bc3c46996a3691b39cfdce3e0",
+  "version": "0.2.4-preview",
+  "buildId": "alpha68.19-preview-community-024",
+  "releaseKind": "scoped-community-gameplay-update",
+  "archiveSha256": "402f985c5eba4a6926262540e241bfc551501dadd1182a187af5432a91a789da",
+  "setupSha256": "664774692334387cc763b748184d1b8a528a45633dd368091e28184b6b3a1d88",
+  "manifestSha256": "d82933f09cb5ee948e6985396b1802c3f4cd558e4e53c3dd95fa60235f833d81",
+  "productionSha256": "55288f4fb238f02086ad5c572643df3c041dfc3585933cf5cf3f6363c202e27a",
+  "validationSha256": "949779e8fbeb0e13be96d7a77a19afa11899c2e6ccb1af664d37263e191807e6",
+  "frozenSourceManifestSha256": "81700842435ac39553496cc826548c607c13476f24632f5e75363a4d36cb9936",
+  "validationSourceManifestSha256": "1b2c038e8f976ec05518a0fdc151150a5ea9f09a922de52412158342c608f14b",
   "productionSourceSha256": {
-    "KevinAccessModule.uc": "5087ff78927913d46a8b804ec11ce64dee7528374aea95d82e13406fa281447c",
+    "KevinAccessModule.uc": "f3471aedd97792fc3e6f5aa06a3d7078636baaa71190cc1bb246c83781ee597b",
     "KevinActivation.uc": "09e192e56d3613b866ad94457501a83b92182f4102bc02f4ecfbb93e8863dde2",
     "KevinBootstrap.uc": "ea4fc900f3cab42ee67e01f008f321efe0014ce8e875abcda186c4af2edf550e",
-    "KevinCommandMenu.uc": "6f548beda9f79721db8fd7824cc1826c12f1b670313d7660629000d56104397d",
-    "KevinCompanionPawn.uc": "4cbca265cb260f8729bb38714993675e670f5dc63dc1a3050efed241a9506d1b",
+    "KevinCommandMenu.uc": "4b9b5a188d90689803b3a305e83563d6bd24d7aa4c3a016a331684005f398dcb",
+    "KevinCompanionPawn.uc": "4637c07c4ff3990644f63200bc869eea5459482bafce55fc3b98271dcfb91e02",
     "KevinDefensiveHunterController.uc": "1dd163780cbe120b7fde6432bc64ae0fdf6ddf201b4a9af19bf99668ee9aec40",
     "KevinDefensiveMutator.uc": "a3c4bb6fcb9dfcaa6c220d9cb5e2f3b9f042dee0c8baafccdad3ee846595bfbd",
     "KevinDefensivePawn.uc": "24b804cdaedefc7e722cfe79c375291e3a5ea07c9dd2c8b985bd718db9be2578",
@@ -23,9 +24,9 @@
     "KevinGatheringJob.uc": "fa3010e994966eeb564c153060e674fadb07824f881bf6786bd5b4e6f299434d",
     "KevinHunterController.uc": "9cf47ecf852e4d25462873631c6929696695009550f322bc79bdc2a7b618e794",
     "KevinJson.uc": "457e608391070b13349d5a5df2411a6e329521dd2d6e43f219a56f62849528ff",
-    "KevinMenuInput.uc": "bb7987faeb81b92c912e234378d6fbc9465d71bc6cac7c0ab2d4b92dde4652d8",
+    "KevinMenuInput.uc": "25164b8945e80c26cc315213f9f4e318a56dda1e77d6bc6655dd0f4b82835b70",
     "KevinMutator.uc": "dc4f7799ef1ac9bfedaf0ae792b77fdac10b05e22199ebdafa0de7094c655088",
-    "KevinRegistry.uc": "9e8f04f8f4ebeaf4ab1e657f4c3cc6148c81b5629ba0acbd93ce0b69bffc023f",
+    "KevinRegistry.uc": "0355246b3be6692fc22847e4aae5a958762708acde8039704e1fccf75b7fb8a3",
     "KevinRevivalBag.uc": "0f78056674bab3628b865685ef8a5b2409d3748cca0296aaa0689a2ffec58516",
     "KevinStartup.uc": "b90abfb5c054db3645a209191a9574be6fa31308653f8d2e636178d182895b76",
     "KevinWoodHarvester.uc": "801822527e6a9ddde7bafe33defdadfd15d2d75405886cfe7653780c572acfd2"
@@ -36,81 +37,110 @@
     "Build-Setup.ps1": "2a4f3c5d3f9b82cf6a7daeca3fe7c2e5f7ee4b937c9c2a7df36739cc61e68f25",
     "KevinSetup.cs": "3f3f1ce79baa0f44636af4eb48085878374f6558bf1ea7456a6a5a60fc71eb64"
   },
-  "loaderCommonSha256": "361d50019da186be6734bdfa4218808bbb1245b5bc73a6dfb30d604c727c9bdf",
-  "setupBuildEvidenceSha256": "2b3d1887d9838cd305ceb9b8a7779c4bac6bc36c90b62c9a0a83cdf70424db77",
+  "promotionEvidenceSha256": "5af6a12a8b6f9fc616cd3ee0ddf281fe25fc0dc9bb37e6cc64f303486a4a50b3",
+  "gateSha256": "f66e284a7c236283153fa50bf8bb2be7ae7592aa2ce16a9ac83f6bbef5d35708",
   "signed": false,
+  "staticAudits": 10,
+  "freshGameplay": [
+    {
+      "label": "recall",
+      "name": "Kevin-024-Recall-04",
+      "passed": 43
+    },
+    {
+      "label": "inventory",
+      "name": "Kevin-024-Inventory-04",
+      "passed": 72
+    },
+    {
+      "label": "combat",
+      "name": "Kevin-024-Combat-04",
+      "passed": 28
+    },
+    {
+      "label": "menu",
+      "name": "Kevin-024-Menu-04",
+      "passed": 26
+    },
+    {
+      "label": "gathering",
+      "name": "Kevin-024-Gathering-04",
+      "passed": 34
+    },
+    {
+      "label": "revival",
+      "name": "Kevin-024-Revival-04",
+      "passed": 27
+    },
+    {
+      "label": "death",
+      "name": "Kevin-024-Death-04",
+      "passed": 20
+    }
+  ],
+  "freshNativeSaveChecks": {
+    "priorSave30Upgrade": 18,
+    "firearmAttachmentDiskCycle": 23
+  },
   "finalWrapperTests": {
     "passed": 28,
     "failed": 0,
-    "evidenceSha256": "269d37c87904cb2aab2c0fc9e53d70cfe29577af7d8e0f935a3465e8b0a42ebf"
+    "evidenceSha256": "84aae7e9701208ec4ae2123bc1f88a0a30193b7b501ee161dc89c6958d041d46"
   },
   "finalInstallationTests": {
-    "passed": 149,
+    "passed": 154,
     "failed": 0,
-    "reviewSha256": "2917b3146647eb43b31f818e4f933cff5e26078ff90cf4b450628d8ee4e936ff",
-    "cases": [
-      {
-        "name": "Fresh install, repeat install, Disable and reinstall",
+    "cases": {
+      "Clean": {
         "passed": 50,
         "failed": 0,
-        "evidenceSha256": "ff703c9526b267ca66349e19eb71ec0a0755042e45590badd545d5c4f8515bb9"
+        "evidenceSha256": "17cf568bc49bba70384a5273131b82daba9a02c3b58c94f3edd65ecf2b51dde3"
       },
-      {
-        "name": "Protected-folder refusal, retry guidance and preservation",
+      "DenyFixtureWrite": {
         "passed": 21,
         "failed": 0,
-        "evidenceSha256": "8824c2b3fd5db36d72c1a9f83a38650d09ad630b0351f6d5e760c48dcba9ec88"
+        "evidenceSha256": "c6547d76c9e799c1abcc3398e6927dbc37a80cbe862040c531fdcd7aa2d3fee4"
       },
-      {
-        "name": "Mid-install write failure and complete rollback",
+      "ReadOnlyFourthCore": {
         "passed": 21,
         "failed": 0,
-        "evidenceSha256": "51ce1d4936dc1f6c54dcea819268cabc7cd8d005309cb7eed4fa3ccca3058f70"
+        "evidenceSha256": "2ed3d4a2f644b28303aabea85c7dd121112aad59d1c46f57bb47f50b090512db"
       },
-      {
-        "name": "Public 0.2.2 upgrade, repeat install, Disable and reinstall",
-        "passed": 57,
+      "Public023Upgrade": {
+        "passed": 62,
         "failed": 0,
-        "evidenceSha256": "9fa041f723906d256d8eb61a05ac6a0ea7531552252652ee947372a3108e077a"
+        "evidenceSha256": "1092ebe11627804b159c18d502b203b58a24fd26307f1cca023c5ef973ab910e"
       }
-    ],
-    "realSetupFormAndWindowsPowerShell51": true,
-    "gameLaunched": false,
+    },
     "interactiveUacTested": false,
     "livePlayerInstallationModified": false
   },
-  "inheritedGameplayEvidence": {
-    "rerunForThisRelease": false,
-    "exactPublic022StaticAudits": 10,
-    "exactPublic022GatheringChecks": 34,
-    "exactPublic022NativeSaveChecks": 18,
-    "historicalFeatureChecks": 168,
-    "historicalWorkshopChecks": 11,
-    "note": "Earlier native save, revival and legacy migration evidence is inherited. No new gameplay or Steam runtime test is claimed for this installer-only repair."
+  "inheritedEvidence": {
+    "promotionSha256": "06632d8fdf5576256101f878d0584295c4300d2fcef5c3a457ddcde9c2600138",
+    "rerun": false
   },
   "downloads": [
     {
-      "name": "Kevin-Setup-0.2.3-preview-Alpha68.19.exe",
-      "url": "https://github.com/SimpleNeb/Subsistence-Kevin/raw/6410f4b8a0c93f52f692a61817bedadcbdf0dc7e/downloads/Kevin-Setup-0.2.3-preview-Alpha68.19.exe",
-      "sha256": "5de7d4f8355b72511981671c8540e3937610b1913990d85e74baf8b37db29f08",
-      "length": 259072,
+      "name": "Kevin-Setup-0.2.4-preview-Alpha68.19.exe",
+      "url": "https://github.com/SimpleNeb/Subsistence-Kevin/raw/ccb4ea4111a7a682bfac44f956ed104c97e25b78/downloads/Kevin-Setup-0.2.4-preview-Alpha68.19.exe",
+      "sha256": "664774692334387cc763b748184d1b8a528a45633dd368091e28184b6b3a1d88",
+      "length": 268288,
       "anonymousDownloadVerified": true,
-      "receiptSha256": "93afd6e413b4c659e6cc6b6805708e2b6923c2cff5d757dee86c3b661ff4eebb"
+      "receiptSha256": "c6618753b487e0a506304ea79d5beb974ff87a68fd716d5a21ea407002d38668"
     },
     {
-      "name": "Kevin-Companion-0.2.3-preview-Alpha68.19.zip",
-      "url": "https://github.com/SimpleNeb/Subsistence-Kevin/raw/6410f4b8a0c93f52f692a61817bedadcbdf0dc7e/downloads/Kevin-Companion-0.2.3-preview-Alpha68.19.zip",
-      "sha256": "402d9789cf9c33dde6b4023e29ab42ffba35b2c5e9dd5ffe2b4f10a1f3d45caa",
-      "length": 229013,
+      "name": "Kevin-Companion-0.2.4-preview-Alpha68.19.zip",
+      "url": "https://github.com/SimpleNeb/Subsistence-Kevin/raw/ccb4ea4111a7a682bfac44f956ed104c97e25b78/downloads/Kevin-Companion-0.2.4-preview-Alpha68.19.zip",
+      "sha256": "402f985c5eba4a6926262540e241bfc551501dadd1182a187af5432a91a789da",
+      "length": 238386,
       "anonymousDownloadVerified": true,
-      "receiptSha256": "87860e55d998e6ffa59ccfad2f75388bcca648cae031598a04ba1c79b7639e72"
+      "receiptSha256": "2c99b9914c1b129e44a3a5749cfd8672914bba06ef0ca91df68f5a756c67baf2"
     }
   ],
-  "limitations": [
-    "The original home-PC failure cause remains unknown without its error report.",
-    "Permission tests cover denied writes and retry construction; UAC consent and elevated relaunch were not invoked.",
-    "Installation tests use isolated retail-file fixtures and save sentinels, not the player's live saves.",
-    "No game launch, multiplayer validation or long public playtest occurred in these installer checks."
-  ],
-  "limits": "Contains reviewed own source and exact preview artifact identities. No game originals, SDK, test packages, save data or local private filesystem paths."
+  "limits": [
+    "Controlled single-player preview, not exhaustive public playtesting.",
+    "Unsigned installer; Smart App Control block remains unresolved.",
+    "No claim that unspecified third-party antivirus detections are false positives.",
+    "Original game files, SDK, test packages, saves and local report paths excluded."
+  ]
 }
