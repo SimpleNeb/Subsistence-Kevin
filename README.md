@@ -12,7 +12,7 @@ I set up this GitHub account for Kevin and manage it myself. Setup installs Kevi
 
 Setup is unsigned. Unknown-publisher or uncommon-download warnings can concern file reputation; they are not automatically malware detections. [Microsoft explains these warnings](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation).
 
-Microsoft Defender found no threats in this exact 0.2.5 Setup, ZIP and included files. This is one scan, not a universal guarantee. Source and SHA256 checksums are public. Keep protection enabled; report a named threat or block with the exact warning. Do not add exclusions or disable security.
+Microsoft Defender found no threats in this exact 0.2.5 Setup, ZIP and included files. Source and SHA256 checksums are public.
 
 **Subscribe AND run Setup. Both steps are required.** Subscription alone does
 not install Kevin's companion code.
