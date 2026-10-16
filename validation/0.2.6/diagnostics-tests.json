@@ -1,0 +1,12 @@
+{
+  "passed": 26,
+  "failed": 0,
+  "syntheticFixturesOnly": true,
+  "gameLaunched": false,
+  "cases": [
+    "valid-install-disable",
+    "same-length-edit",
+    "wrong-length",
+    "hash-only"
+  ]
+}

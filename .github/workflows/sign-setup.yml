@@ -1,0 +1,107 @@
+name: Prepare signed Setup for review
+
+on:
+  workflow_dispatch:
+    inputs:
+      archive_sha256:
+        description: 'Approved SHA256 of the finalized 0.2.6 release ZIP on main'
+        required: true
+        type: string
+      approve_signing_charge:
+        description: 'I approve this run against the existing paid signing service'
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kevin-manual-signing
+  cancel-in-progress: false
+
+jobs:
+  sign-for-review:
+    if: github.repository == 'SimpleNeb/Subsistence-Kevin' && github.ref == 'refs/heads/main'
+    runs-on: windows-2025
+    timeout-minutes: 20
+    environment: release-signing
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        shell: powershell
+    env:
+      APPROVED_ZIP_SHA256: ${{ inputs.archive_sha256 }}
+      SIGNING_CHARGE_APPROVED: ${{ inputs.approve_signing_charge }}
+      RELEASE_ZIP: downloads/Kevin-Companion-0.2.6-preview-Alpha68.19.zip
+      EXPECTED_SIGNER_SUBJECT: ${{ vars.EXPECTED_SIGNER_SUBJECT }}
+      SIGNING_ENDPOINT: ${{ vars.ARTIFACT_SIGNING_ENDPOINT }}
+      SIGNING_ACCOUNT: ${{ vars.ARTIFACT_SIGNING_ACCOUNT }}
+      SIGNING_PROFILE: ${{ vars.ARTIFACT_SIGNING_PROFILE }}
+    steps:
+      - name: Require approved and configured signing
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        run: |
+          if ($env:SIGNING_CHARGE_APPROVED -ne 'true') { throw 'Explicit approval is required before accessing the paid signing service.' }
+          if ($env:APPROVED_ZIP_SHA256 -notmatch '^[a-fA-F0-9]{64}$') { throw 'Supply the approved finalized ZIP SHA256.' }
+          foreach ($key in @('AZURE_CLIENT_ID','AZURE_TENANT_ID','AZURE_SUBSCRIPTION_ID','EXPECTED_SIGNER_SUBJECT','SIGNING_ENDPOINT','SIGNING_ACCOUNT','SIGNING_PROFILE')) {
+              if ([string]::IsNullOrWhiteSpace([Environment]::GetEnvironmentVariable($key))) { throw ('Missing release-signing environment setting: ' + $key) }
+          }
+          if ($env:SIGNING_ENDPOINT -notmatch '^https://[a-z0-9]+\.codesigning\.azure\.net/?$') { throw 'Use the official endpoint for the configured Artifact Signing region.' }
+          $work = Join-Path $env:RUNNER_TEMP ('kevin-signing-' + $env:GITHUB_RUN_ID + '-' + $env:GITHUB_RUN_ATTEMPT)
+          [IO.File]::AppendAllText($env:GITHUB_ENV, ('SIGNING_WORK=' + $work + [Environment]::NewLine), (New-Object Text.UTF8Encoding($false)))
+
+      - name: Check out the reviewed main commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Validate the finalized archive and build an unsigned candidate
+        run: |
+          & .\setup\Prepare-SignedSetup.ps1 -Stage Prepare -ZipPath $env:RELEASE_ZIP -ExpectedSha256 $env:APPROVED_ZIP_SHA256 -WorkDirectory $env:SIGNING_WORK -SourceCommit $env:GITHUB_SHA
+
+      - name: Authenticate to Azure with the environment-bound OIDC identity
+        uses: azure/login@a641126d1b8aa4d1fa005f4f92df94a3a4c4c906 # v3.1.0
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Sign only the prepared outer Setup EXE
+        uses: azure/artifact-signing-action@c7ab2a863ab5f9a846ddb8265964877ef296ee82 # v2.0.0
+        with:
+          endpoint: ${{ vars.ARTIFACT_SIGNING_ENDPOINT }}
+          signing-account-name: ${{ vars.ARTIFACT_SIGNING_ACCOUNT }}
+          certificate-profile-name: ${{ vars.ARTIFACT_SIGNING_PROFILE }}
+          files: ${{ env.SIGNING_WORK }}\Kevin-Setup-0.2.6-preview-Alpha68.19-signed.exe
+          file-digest: SHA256
+          timestamp-rfc3161: http://timestamp.acs.microsoft.com
+          timestamp-digest: SHA256
+          exclude-environment-credential: true
+          exclude-azure-cli-credential: false
+          cache-dependencies: false
+
+      - name: Verify signatures, embedded ZIP, and final checksums
+        run: |
+          & .\setup\Prepare-SignedSetup.ps1 -Stage Finalize -ZipPath $env:RELEASE_ZIP -ExpectedSha256 $env:APPROVED_ZIP_SHA256 -WorkDirectory $env:SIGNING_WORK -ExpectedSignerSubject $env:EXPECTED_SIGNER_SUBJECT -SourceCommit $env:GITHUB_SHA
+
+      - name: Run Setup regression checks on the exact signed candidate
+        run: |
+          $candidate = Join-Path $env:SIGNING_WORK 'review-candidate'
+          $exe = Join-Path $candidate 'Kevin-Setup-0.2.6-preview-Alpha68.19-signed.exe'
+          & .\setup\Test-Setup.ps1 -FinalZip $env:RELEASE_ZIP -ExpectedSha256 ($env:APPROVED_ZIP_SHA256.ToLowerInvariant()) -PrototypeExe $exe | Tee-Object -FilePath (Join-Path $candidate 'setup-tests.txt')
+          if (-not $?) { throw 'Signed Setup regression checks failed.' }
+          'Signature verification and Setup regression checks passed. Gameplay verification and publication remain manual.' | Set-Content -LiteralPath (Join-Path $candidate 'REVIEW-REQUIRED.txt')
+
+      - name: Save the signed files for maintainer review
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: Kevin-0.2.6-signed-review-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ env.SIGNING_WORK }}\review-candidate\*
+          if-no-files-found: error
+          retention-days: 14

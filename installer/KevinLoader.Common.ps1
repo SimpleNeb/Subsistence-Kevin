@@ -40,8 +40,13 @@ function Assert-KevinFile([string]$Path, [string]$Hash, $Length = $null) {
     if ($Hash -notmatch '^[a-fA-F0-9]{64}$' -or -not (Test-Path -LiteralPath $Path -PathType Leaf)) {
         throw "Required file or valid checksum is missing: $Path"
     }
-    if ($null -ne $Length -and (Get-Item -LiteralPath $Path).Length -ne [long]$Length) { throw "File length mismatch: $Path" }
-    if ((Get-KevinHash $Path) -ne $Hash.ToLowerInvariant()) { throw "File version/checksum mismatch: $Path" }
+    $actualLength = (Get-Item -LiteralPath $Path).Length
+    $actualHash = Get-KevinHash $Path
+    $expectedHash = $Hash.ToLowerInvariant()
+    $expectedLength = if ($null -eq $Length) { 'not specified' } else { [string][long]$Length }
+    $diagnostic = "Path: $Path`r`nExpected SHA256: $expectedHash`r`nActual SHA256: $actualHash`r`nExpected length: $expectedLength`r`nActual length: $actualLength"
+    if ($null -ne $Length -and $actualLength -ne [long]$Length) { throw "File length mismatch: $Path`r`n$diagnostic" }
+    if ($actualHash -ne $expectedHash) { throw "File version/checksum mismatch: $Path`r`n$diagnostic" }
 }
 
 function Get-KevinInteger($Value) {

@@ -1,6 +1,6 @@
 # Install Kevin Companion
 
-**[DOWNLOAD KEVIN SETUP. Windows installer](https://github.com/SimpleNeb/Subsistence-Kevin/raw/e0892d87ee6a25f3d89bcb1727c3bc1f88382d09/downloads/Kevin-Setup-0.2.5-preview-Alpha68.19.exe)**
+**[DOWNLOAD KEVIN SETUP. Windows installer](https://github.com/SimpleNeb/Subsistence-Kevin/raw/5d660a03cc9f80c4625f47b23b0551f7241a069f/downloads/Kevin-Setup-0.2.6-preview-Alpha68.19.exe)**
 
 **Subscribe AND run Setup. Both are required.** Windows, single-player,
 Subsistence Alpha 68.19. No GitHub account is needed.
@@ -39,6 +39,19 @@ For other errors, use Save setup report; remove personal folder names before
 [posting a report](https://github.com/SimpleNeb/Subsistence-Kevin/issues).
 If Setup never opens, include the warning screenshot. Do not force a patch over
 a version/checksum mismatch.
+
+### File version/checksum mismatch
+
+Setup 0.2.6 includes expected and actual SHA256 checksums and file sizes in the
+report. A mismatch can mean a modified file, a different game version or damage;
+administrator permission does not resolve it.
+
+Back up your saves and preserve `.KevinLoader` before restoring files. For a
+fresh install, restore a verified original or use Steam **Properties → Installed
+Files → Verify integrity of game files**, then retry. Steam verification can
+replace other mods. If Kevin is already installed, or the mismatch concerns a
+loader backup or extracted Setup file, preserve the records and report it before
+changing files. Do not edit checksums or force a patch.
 
 ## Français : activer Kevin
 

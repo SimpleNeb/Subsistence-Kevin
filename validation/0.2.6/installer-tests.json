@@ -1,0 +1,87 @@
+{
+  "passed": 138,
+  "failed": 0,
+  "bundleBuild": "alpha68.19-preview-diagnostics-026",
+  "bundleManifestSha256": "966401b1845f8edcce0c659a93b77f7939d33975f90b296e7034bbef57e4d05d",
+  "previousBuild": "alpha68.19-preview-scavenging-025",
+  "liveGameWritten": false,
+  "gameLaunched": false,
+  "fixtures": [
+    {
+      "root": "fresh-game",
+      "sentinelHash": "44bdf4f5296140471c88ab68d6fe1f99b59531bd2fb9d96943f491a63b33e88c"
+    },
+    {
+      "root": "upgrade-game",
+      "sentinelHash": "0e3f41efb49fe1bab5f20b0b591c71e38fcbd546ddab4d413b51305e65280ca3"
+    }
+  ],
+  "runs": [
+    {
+      "label": "modified-source-rejected",
+      "action": "Install",
+      "build": "alpha68.19-preview-diagnostics-026",
+      "game": "fresh-game",
+      "exitCode": 1,
+      "log": "logs/modified-source-rejected.txt"
+    },
+    {
+      "label": "fresh-install",
+      "action": "Install",
+      "build": "alpha68.19-preview-diagnostics-026",
+      "game": "fresh-game",
+      "exitCode": 0,
+      "log": "logs/fresh-install.txt"
+    },
+    {
+      "label": "repeat-install",
+      "action": "Install",
+      "build": "alpha68.19-preview-diagnostics-026",
+      "game": "fresh-game",
+      "exitCode": 0,
+      "log": "logs/repeat-install.txt"
+    },
+    {
+      "label": "disable-fresh",
+      "action": "Disable",
+      "build": "alpha68.19-preview-diagnostics-026",
+      "game": "fresh-game",
+      "exitCode": 0,
+      "log": "logs/disable-fresh.txt"
+    },
+    {
+      "label": "reinstall-disabled",
+      "action": "Install",
+      "build": "alpha68.19-preview-diagnostics-026",
+      "game": "fresh-game",
+      "exitCode": 0,
+      "log": "logs/reinstall-disabled.txt"
+    },
+    {
+      "label": "install-predecessor",
+      "action": "Install",
+      "build": "alpha68.19-preview-scavenging-025",
+      "game": "upgrade-game",
+      "exitCode": 0,
+      "log": "logs/install-predecessor.txt"
+    },
+    {
+      "label": "upgrade-current",
+      "action": "Install",
+      "build": "alpha68.19-preview-diagnostics-026",
+      "game": "upgrade-game",
+      "exitCode": 0,
+      "log": "logs/upgrade-current.txt"
+    },
+    {
+      "label": "disable-upgraded",
+      "action": "Disable",
+      "build": "alpha68.19-preview-diagnostics-026",
+      "game": "upgrade-game",
+      "exitCode": 0,
+      "log": "logs/disable-upgraded.txt"
+    }
+  ],
+  "archiveSha256": "23cca898cd178f9350ba45f51a7eb4e071948e52eabc15f0e830e9818a554b19",
+  "note": "Private local paths removed. Logs remain local; labels and exit codes are preserved."
+}

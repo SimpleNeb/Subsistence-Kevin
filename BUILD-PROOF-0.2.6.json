@@ -1,0 +1,50 @@
+{
+  "format": "kevin-public-build-proof-v1",
+  "releaseStatus": "VALIDATED",
+  "version": "0.2.6-preview",
+  "buildId": "alpha68.19-preview-diagnostics-026",
+  "releaseKind": "installer-diagnostics-only",
+  "artifactCommit": "5d660a03cc9f80c4625f47b23b0551f7241a069f",
+  "archiveSha256": "23cca898cd178f9350ba45f51a7eb4e071948e52eabc15f0e830e9818a554b19",
+  "setupSha256": "e79ce8305b8a41c3711132cd6611c5c87b90fd1c624243ae3b2cc8e11821c029",
+  "manifestSha256": "966401b1845f8edcce0c659a93b77f7939d33975f90b296e7034bbef57e4d05d",
+  "productionSha256": "48a87024639c15d3febca31fdecb65197a184c1cfbf6a95347de1c1f72df5db5",
+  "gameplayAndPatchesIdenticalTo": "0.2.5-preview",
+  "gameplayValidation": "Inherited from 0.2.5; no new gameplay claims",
+  "freshGameplayChecks": 0,
+  "freshChecks": {
+    "failed": 0,
+    "wrapper": 28,
+    "installerLifecycle": 138,
+    "installerDiagnostics": 26
+  },
+  "installedOnHomePC": true,
+  "existingSaveFilesVerifiedUnchanged": 63,
+  "interactiveUacTested": false,
+  "gameLaunchedByTests": false,
+  "signed": false,
+  "defender": {
+    "customScanCompleted": true,
+    "scanIsNotPublisherAuthentication": true,
+    "matchingDetectionsRecorded": 0,
+    "scope": "Final Setup EXE, ZIP and extracted payload"
+  },
+  "sourceSha256": {
+    "installer/KevinLoader.Common.ps1": "3bdb76287c88621498ef9e6bb79d8c0146a8f5c0f3a41a78cedb46a2a05fbe77",
+    "installer/Install-Kevin.ps1": "e0b97b80ec71db41056b1f712691ff0d43b749e49997882acad3d9eb0668aed5",
+    "installer/Disable-Kevin.ps1": "407e0743878e20de52963abbb24c9b6f55bd3e3dad59b7fedc4491039951270f",
+    "setup/Build-DiagnosticRelease.ps1": "e77bb6e85b1cb9e9986661f9f77a9fe62c61bcce2113640b8f10b90833eb91a9",
+    "setup/Build-Setup.ps1": "cd9b127305429f8de642240bc4f231fb2d58da1837003f5798db2c9516cdac1f",
+    "setup/BundlePayload.cs": "18d3410d86f2772dfcdd860f2fc3789adf4ca1d6a70afd929a2dc04e6a277474",
+    "setup/KevinSetup.cs": "45fd9bd6e13b4c830e8b490d769b129cfca3590831349433051bc99ae67c43b7",
+    "setup/Test-Setup.ps1": "af3d41c808b55c50e31e2b0d830cc1d2573ff479ff82801479352b82b1036af4",
+    "setup/Test-Installer.ps1": "0db9c3a1a70c5cf072c74f274f9ecbb0f4ed9de740084bf7687caf881b478199",
+    "setup/Test-InstallerDiagnostics.ps1": "3ce096d30b2255505e5a64c377aeaf1094770ee37b291137b771ccf53f26db3b"
+  },
+  "evidenceSha256": {
+    "validation/0.2.6/wrapper-tests.json": "4397bdf0b4cd5ec0e68b1082af73fd26aac5a2e2c659467d85f3fd82042b4e3c",
+    "validation/0.2.6/installer-tests.json": "7b50b839772a13b4fe1ab9d1ba752ce1c021d5641958c4fb29aa6c49f1efa637",
+    "validation/0.2.6/diagnostics-tests.json": "23a0155220951fae1f0f820cf90cf720c478d25daa6a9843f99a7337dd9b5aae"
+  },
+  "sourceHashNote": "Hashes identify the Windows working files used to build/test; checkout line endings may differ."
+}

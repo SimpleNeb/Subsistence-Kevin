@@ -1,0 +1,10 @@
+{
+  "releaseFiles": 20,
+  "setupSha256": "e79ce8305b8a41c3711132cd6611c5c87b90fd1c624243ae3b2cc8e11821c029",
+  "passed": 28,
+  "gameLaunched": false,
+  "compatibilityArchiveSha256": "",
+  "installerRun": false,
+  "failed": 0,
+  "archiveSha256": "23cca898cd178f9350ba45f51a7eb4e071948e52eabc15f0e830e9818a554b19"
+}
