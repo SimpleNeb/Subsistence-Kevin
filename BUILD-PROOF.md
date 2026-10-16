@@ -1,4 +1,37 @@
-# Kevin Companion 0.2.5. Build and validation
+# Kevin Companion 0.2.6. Build and validation
+
+0.2.6 improves installer diagnostics and recovery guidance. The companion
+package, native metadata and all four patches are **byte-identical to 0.2.5**.
+The mismatch investigated on a second PC was an old development probe in
+`ColdGame.u`; its verified original matched the supported retail file. The
+installer continues to reject unknown bytes before staging changes.
+
+Fresh checks on the final release: **28 wrapper checks, 26 installer-diagnostic
+checks and 138 installation lifecycle checks**, all passing. These cover changed
+source rejection, fresh installation, repeated installation, Disable/reinstall,
+0.2.5 upgrade, original backup preservation and save/configuration sentinels.
+The installer also completed on that PC after restoring the checksum-verified
+original, with all 63 existing save files unchanged. No new gameplay or
+interactive UAC testing is claimed. Earlier gameplay evidence below is inherited.
+
+Microsoft Defender completed a custom scan of the final Setup, ZIP and extracted
+payload; no matching detections were recorded. This is one product's result,
+not publisher verification or a guarantee about other security products.
+**The release remains unsigned.** [Signing preparation](SIGNING.md) is separate.
+
+[Setup 0.2.6](https://github.com/SimpleNeb/Subsistence-Kevin/raw/5d660a03cc9f80c4625f47b23b0551f7241a069f/downloads/Kevin-Setup-0.2.6-preview-Alpha68.19.exe)
+SHA256: `e79ce8305b8a41c3711132cd6611c5c87b90fd1c624243ae3b2cc8e11821c029`
+
+[Complete ZIP 0.2.6](https://github.com/SimpleNeb/Subsistence-Kevin/raw/5d660a03cc9f80c4625f47b23b0551f7241a069f/downloads/Kevin-Companion-0.2.6-preview-Alpha68.19.zip)
+SHA256: `23cca898cd178f9350ba45f51a7eb4e071948e52eabc15f0e830e9818a554b19`
+
+[BUILD-PROOF-0.2.6.json](BUILD-PROOF-0.2.6.json) records exact identities and
+links the sanitized [test summaries](validation/0.2.6). The test scripts are
+included in `setup/`; original game files, saves and local repair backups are
+not distributed. The prior [BUILD-PROOF.json](BUILD-PROOF.json) remains the
+unchanged historical evidence for 0.2.5.
+
+## Historical 0.2.5 gameplay validation
 
 This release adds native loot-box gathering, scrap and Gather All commands, a wider search area, and defensive hunting/recurve bows using supplied ordinary or premium arrows. Installer scripts and native startup hooks remain unchanged from 0.2.4.
 

@@ -182,8 +182,16 @@ namespace KevinSetup {
                 "Windows blocked access to the game folder. Choose Retry as administrator and approve the Windows permission prompt.";
             else if (details.IndexOf("Close Subsistence", StringComparison.OrdinalIgnoreCase) >= 0)
                 status.Text = "Close Subsistence, then choose Install / Update or Disable Kevin again.";
-            else if (Regex.IsMatch(details, "checksum mismatch|length mismatch|version/checksum", RegexOptions.IgnoreCase))
-                status.Text = "These files differ from the supported Alpha 68.19 build. Save the report below so we can check the exact mismatch.";
+            else if (Regex.IsMatch(details, "checksum mismatch|length mismatch|version/checksum", RegexOptions.IgnoreCase)) {
+                status.Text = "A file differs from the supported Alpha 68.19 release. Back up your saves and save this report. Recovery steps are shown below.";
+                string recovery = "\r\n\r\nRecovery steps:\r\n" +
+                    "Keep a copy of your saves and the .KevinLoader folder before restoring any files.\r\n" +
+                    "For a modified game file on a fresh installation, restore its verified original backup, or use Steam > Subsistence > Properties > Installed Files > Verify integrity of game files. Then rerun Setup.\r\n" +
+                    "If Kevin is already installed, or the reported file is in .KevinLoader or KevinCompanion\\Setup, share this report before restoring files so the existing installation and backups can be checked.\r\n" +
+                    "Setup will not force a patch onto a different file. The report includes the expected and actual file hashes and lengths when available.";
+                output.AppendText(recovery);
+                if (reportText != null) { reportText += recovery; PersistReport(); }
+            }
             else status.Text = "Setup did not complete. Choose Save setup report below and include it when reporting this issue.";
         }
         private static bool IsAdministrator() {

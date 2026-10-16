@@ -133,6 +133,9 @@ try {
     Check ($administrator.Enabled -eq (-not $isAdmin) -and $status.Text.Contains('Windows')) 'access denial offers the Windows permission retry only without administrator access'
     $showFailure.Invoke($form, @('File version/checksum mismatch: game'))
     Check (-not $administrator.Enabled -and $status.Text.Contains('Alpha 68.19')) 'file mismatch gives compatibility guidance without an irrelevant elevation retry'
+    $failureOutput = $formType.GetField('output', $flags).GetValue($form).Text
+    Check ($status.Text.Contains('Back up your saves') -and $failureOutput.Contains('verified original backup') -and
+        $failureOutput.Contains('Verify integrity of game files') -and $failureOutput.Contains('If Kevin is already installed')) 'mismatch explains safe original-file recovery and preserves installed-state diagnosis'
     $showFailure.Invoke($form, @('Close Subsistence and its development tools before changing the loader.'))
     Check ($status.Text.StartsWith('Close Subsistence')) 'running game gives actionable close-and-retry guidance'
     $showFailure.Invoke($form, @('Unknown test failure'))

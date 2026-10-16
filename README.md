@@ -1,8 +1,8 @@
 # Kevin Companion for Subsistence
 
-## [DOWNLOAD KEVIN SETUP. CLICK HERE](https://github.com/SimpleNeb/Subsistence-Kevin/raw/e0892d87ee6a25f3d89bcb1727c3bc1f88382d09/downloads/Kevin-Setup-0.2.5-preview-Alpha68.19.exe)
+## [DOWNLOAD KEVIN SETUP. CLICK HERE](https://github.com/SimpleNeb/Subsistence-Kevin/raw/5d660a03cc9f80c4625f47b23b0551f7241a069f/downloads/Kevin-Setup-0.2.6-preview-Alpha68.19.exe)
 
-**0.2.5 preview · Windows · Single-player · Subsistence Alpha 68.19**
+**0.2.6 preview · Windows · Single-player · Subsistence Alpha 68.19**
 
 ## A note from SimpleNeb about download warnings
 
@@ -12,7 +12,7 @@ I set up this GitHub account for Kevin and manage it myself. Setup installs Kevi
 
 Setup is unsigned. Unknown-publisher or uncommon-download warnings can concern file reputation; they are not automatically malware detections. [Microsoft explains these warnings](https://learn.microsoft.com/en-us/windows/apps/package-and-deploy/smartscreen-reputation).
 
-Microsoft Defender found no threats in this exact 0.2.5 Setup, ZIP and included files. Source and SHA256 checksums are public.
+Microsoft Defender completed a custom scan of the 0.2.6 Setup, ZIP and included files with no matching detections recorded. Source and SHA256 checksums are public. Publisher signing is being prepared; this release remains unsigned.
 
 **Subscribe AND run Setup. Both steps are required.** Subscription alone does
 not install Kevin's companion code.
@@ -33,9 +33,9 @@ not install Kevin's companion code.
 **Already installed?** Keep your subscription. Download the **new** Setup, close
 the game and run Install / Update again. Steam does not automatically update
 Kevin's installed code. Setup supports upgrading the earlier supported previews
-through 0.2.4.
+through 0.2.5.
 
-Prefer the complete installer ZIP? [Download it here](https://github.com/SimpleNeb/Subsistence-Kevin/raw/e0892d87ee6a25f3d89bcb1727c3bc1f88382d09/downloads/Kevin-Companion-0.2.5-preview-Alpha68.19.zip), extract
+Prefer the complete installer ZIP? [Download it here](https://github.com/SimpleNeb/Subsistence-Kevin/raw/5d660a03cc9f80c4625f47b23b0551f7241a069f/downloads/Kevin-Companion-0.2.6-preview-Alpha68.19.zip), extract
 the entire archive and run Install Kevin.cmd. Use Setup or this ZIP; you do not
 need both. The repository's source ZIP is a different download.
 
@@ -47,7 +47,20 @@ bring him along for company on the trail.
 
 ![Kevin Companion illustrated cover](artwork/preview.jpg)
 
-## New in 0.2.5
+## New in 0.2.6
+
+Setup now reports the expected and actual file checksums and lengths, and gives
+recovery steps when a game file has been modified. The companion gameplay and
+patches are identical to 0.2.5. Existing 0.2.5 installations can upgrade normally.
+
+If a fresh installation reports a mismatch, back up saves and preserve any
+`.KevinLoader` folder. Restore a verified original game file or use Steam's
+**Properties → Installed Files → Verify integrity**, then run Setup again.
+Verification can replace other mods. If Kevin is already installed, preserve its
+backups and [share the setup report](https://github.com/SimpleNeb/Subsistence-Kevin/issues)
+before restoring files. Never force a patch onto an unknown file.
+
+## Gameplay added in 0.2.5
 
 - **Loot ordinary world boxes.** Kevin approaches eligible boxes and takes their
   actual contents that fit in his cargo. Leftover items remain in the box.

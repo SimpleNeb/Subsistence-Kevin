@@ -33,10 +33,13 @@ the verified project release page. Keep the ZIP/manual .cmd option as a fallback
 
 Test-Setup.ps1 covers archive checks, tamper rejection, argument quoting, permission
 retry construction, failure guidance and an offscreen render. It does not execute
-the installer or the Windows permission prompt. tools/Test-SetupFreshInstall.ps1
-separately drives the real SetupForm install/disable worker against isolated copies
-of retail files, including Unicode paths and write failures. It never launches the
-game. Preserve the exact final EXE's test evidence and published checksum; rebuilding
+the installer or the Windows permission prompt. Test-Installer.ps1 executes the
+real PowerShell install/disable scripts against isolated copies of retail files,
+including repeat installation, disable/reinstall and predecessor upgrade.
+Test-InstallerDiagnostics.ps1 checks exact diagnostics and rejection-before-writes
+using synthetic fixtures. Neither launches the game. Earlier release evidence
+refers to an office-only SetupForm integration harness that is not in this repo.
+Preserve the exact final EXE's test evidence and published checksum; rebuilding
 after testing changes the wrapper hash. Real interactive UAC consent is separate
 from testing the same-EXE runas request and error handling.
 
@@ -49,3 +52,9 @@ screen. Read player guide opens PLAYER-GUIDE.txt for releases that include it.
 They contain only public release files. The UI cannot be closed during an active file
 operation; externally killing Windows/PowerShell remains subject to installer journal
 recovery on the next run. Game backups and saved-class packages are retained as before.
+
+Build-DiagnosticRelease.ps1 reproduces the 0.2.6 payload from the checksum-pinned
+public 0.2.5 archive plus installer source. It copies the gameplay package and
+patches unchanged and explicitly authorizes the exact 0.2.5 predecessor. Choose
+a new output directory, run the tests, then build and test the final Setup EXE.
+SIGNING.md in the repository root describes publisher signing prerequisites.
