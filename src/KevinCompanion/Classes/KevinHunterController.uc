@@ -144,7 +144,9 @@ function bool EquipGatheringAxe()
 function bool StartGathering(name job, out string reason)
 {
     local KevinGatheringJob preparedJob;
-    if (job != 'Wood' && job != 'Fiber') { reason = "Unknown gathering order."; return false; }
+    if (job != 'Wood' && job != 'Fiber' && job != 'Loot' && job != 'Scrap' && job != 'All') {
+        reason = "Unknown gathering order."; return false;
+    }
     if (WorldInfo.NetMode != NM_Standalone || Pawn == none || Pawn.Health <= 0 || CompanionOwner == none ||
         CompanionOwner.Pawn == none || CompanionOwner.Pawn.Health <= 0 || KevinCompanionPawn(Pawn) == none ||
         KevinCompanionPawn(Pawn).IsKevinInventoryBusy() || IsInCombat() || bIsInBase || IsInCave() || IsInLavaCave()) {
@@ -156,7 +158,7 @@ function bool StartGathering(name job, out string reason)
     if (!preparedJob.InitializeJob(self, job)) {
         preparedJob.Destroy(); reason = "Could not start gathering."; return false;
     }
-    if (!preparedJob.CanFitSingle(job == 'Wood' ? class'ColdInventoryItem_Log' : class'ColdInventoryItem_Fibers', 1)) {
+    if (!preparedJob.CanStartOrder()) {
         preparedJob.Destroy(); reason = "Kevin's cargo is full."; return false;
     }
     if (job == 'Wood' && !EquipGatheringAxe()) {
@@ -167,7 +169,7 @@ function bool StartGathering(name job, out string reason)
     SetFollowing(false);
     GatheringJob = preparedJob;
     if (!bCommandMenuOpen) { _GotoState('KevinGather', 'Begin', true); }
-    reason = job == 'Wood' ? "Kevin is gathering nearby wood." : "Kevin is gathering nearby fiber.";
+    reason = "Kevin: " $ GetGatheringLabel() $ ".";
     LogInternal("KEVIN GATHER START job=" $ string(job));
     return true;
 }
@@ -177,11 +179,23 @@ function name GetGatheringOrder()
     return GatheringJob != none ? GatheringJob.JobKind : '';
 }
 
-function string GetGatheringStatus()
+function string GetGatheringLabel()
 {
     if (GatheringJob == none) { return bFollowing ? "Following" : "Staying"; }
-    return (GatheringJob.JobKind == 'Wood' ? "Gathering wood" : "Gathering fiber") $
-        " (" $ string(GatheringJob.UnitsGathered) $ " collected)";
+    switch (GatheringJob.JobKind) {
+        case 'Wood': return "Gathering wood";
+        case 'Fiber': return "Gathering fiber";
+        case 'Loot': return "Looting boxes";
+        case 'Scrap': return "Gathering scrap";
+        case 'All': return "Gathering supplies";
+    }
+    return "Gathering";
+}
+
+function string GetGatheringStatus()
+{
+    return GetGatheringLabel() $ (GatheringJob != none ?
+        " (" $ string(GatheringJob.UnitsGathered) $ " collected)" : "");
 }
 
 function CancelGathering(optional bool resumeFollowing)

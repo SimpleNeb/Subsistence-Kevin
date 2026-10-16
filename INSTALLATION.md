@@ -1,62 +1,50 @@
 # Install Kevin Companion
 
-**[DOWNLOAD KEVIN SETUP — Windows installer](https://github.com/SimpleNeb/Subsistence-Kevin/raw/ccb4ea4111a7a682bfac44f956ed104c97e25b78/downloads/Kevin-Setup-0.2.4-preview-Alpha68.19.exe)**
+**[DOWNLOAD KEVIN SETUP. Windows installer](https://github.com/SimpleNeb/Subsistence-Kevin/raw/e0892d87ee6a25f3d89bcb1727c3bc1f88382d09/downloads/Kevin-Setup-0.2.5-preview-Alpha68.19.exe)**
 
-**You need both the Workshop subscription and the installer above.** Subscribing
-by itself does not install Kevin's companion code. This preview supports
-**Windows, single-player, Subsistence Alpha 68.19**.
+**Subscribe AND run Setup. Both are required.** Windows, single-player,
+Subsistence Alpha 68.19. No GitHub account is needed.
 
-1. **[Subscribe to Kevin on Steam](https://steamcommunity.com/sharedfiles/filedetails/?id=3816609201).**
-2. **Close Subsistence completely.**
-3. **Click DOWNLOAD KEVIN SETUP above.** Open the downloaded `Kevin-Setup-…exe`
-   from your browser's Downloads list or your Downloads folder. You do not need
-   a GitHub account, the repository's **Code** button, or **Download ZIP**.
-4. **Check the Subsistence folder shown in Setup.** If it is blank or wrong,
-   click **Browse…** and select the game's main folder, containing both
-   `Binaries` and `UDKGame`. To find it in Steam, right-click **Subsistence** in
-   your Library, then choose **Manage → Browse local files**.
-5. **Click Install / Update.** Wait until Setup says **Kevin installed**.
-6. **Open Subsistence and select your single-player profile.** Open that
-   profile's **Mods** list and select **Kevin Companion**, then start or continue
-   the profile. Installing the files and selecting the mod are separate steps.
-7. **Go outside onto open ground.** Kevin joins you automatically when there is
-   a safe outdoor spot nearby. You do not have to recruit a hunter or find a
-   special map location.
+1. [Subscribe to Kevin on Steam](https://steamcommunity.com/sharedfiles/filedetails/?id=3816609201).
+2. Close Subsistence completely.
+3. Download Kevin Setup with the link above and open it from Downloads. You do
+   not need the repository's Code button or Download ZIP.
+4. Check the game folder shown in Setup. Use Browse to select the Subsistence
+   folder containing **Binaries** and **UDKGame**. Steam Library → right-click
+   Subsistence → Manage → Browse local files shows that folder.
+5. Click **Install / Update**. Wait for **Kevin installed**.
+6. Launch Subsistence → choose your single-player profile → **Mods** → select
+   **Kevin Companion** → start or continue the profile.
+7. Go outside onto clear ground. Kevin joins you when a safe place is available.
+   There is no recruitment quest or special map location.
 
-Stand close to Kevin and press your normal **Use** key for his inventory.
-**Crouch + Use** near him opens his command menu.
+For every update, download the **new** Setup, close the game and Install / Update
+again. Keep your subscription. Steam does not automatically update Kevin's code.
 
-## Updating an existing installation
-
-Keep your Workshop subscription. **Download the new Setup, close the game, and
-click Install / Update again.** Steam does not automatically update Kevin's
-installed companion code. Use the new file, not an older Setup in Downloads.
+Stand close + Use opens inventory; crouch close + Use opens commands. To recall
+Kevin, close other menus, press F6 and click RECALL KEVIN in the upper-right HUD.
+If he is dead, his belongings remain in the original death bag.
 
 ## If something stops you
 
-- **Windows blocks the download or app, or antivirus reports a threat:** stop
-  and report the exact warning, security product, detection name and installer
-  version on [GitHub](https://github.com/SimpleNeb/Subsistence-Kevin/issues).
-  Kevin Setup is unsigned. Smart App Control can block unsigned apps and has no
-  individual-app exception. This is a known distribution limitation; do not turn
-  off protection or add an exclusion to install Kevin. See
-  [Microsoft's Smart App Control explanation](https://support.microsoft.com/en-us/windows/security/threat-malware-protection/smart-app-control-frequently-asked-questions).
-- **Setup opens but reports access denied to the game folder:** click its
-  **Retry as administrator** button, then approve the Windows permission prompt
-  if you want to allow installation. This addresses folder permissions; it does
-  not resolve a security block.
-- **Setup reports a different game version or changed files:** save its report.
-  Do not force installation over the mismatch.
-- **Any other Setup error:** click **Save setup report…** and include that text
-  with your report. If Setup never opens, include a screenshot of the warning.
-  Before posting publicly, remove any personal folder names you want kept private.
+Setup is unsigned. Smart App Control can block it and has no individual-app
+exception. Keep protection enabled and report the exact warning, security
+product, detection name and version. Do not add an exclusion to install Kevin.
+A clean scan by one product does not settle another product's detection.
+[Microsoft explains Smart App Control](https://support.microsoft.com/en-us/windows/security/threat-malware-protection/smart-app-control-frequently-asked-questions).
+
+If Setup opens but reports game-folder access denied, Retry as administrator
+requests permission to change that folder. It does not resolve a security block.
+For other errors, use Save setup report; remove personal folder names before
+[posting a report](https://github.com/SimpleNeb/Subsistence-Kevin/issues).
+If Setup never opens, include the warning screenshot. Do not force a patch over
+a version/checksum mismatch.
 
 ## Français : activer Kevin
 
-Abonnez-vous sur le Workshop, fermez Subsistence, puis téléchargez et lancez
-**Kevin Setup** avec le lien en haut. Cliquez sur **Install / Update**. Relancez
-le jeu, ouvrez la liste **Mods** de votre profil solo et sélectionnez
-**Kevin Companion** avant de charger la partie. Sortez sur un terrain dégagé :
-Kevin apparaît près de vous. Debout près de lui, utilisez votre touche
-**Interagir / Use** pour l'inventaire ; accroupi, utilisez la même touche pour
-ses ordres.
+Abonnez-vous, fermez le jeu, téléchargez Kevin Setup avec le lien en haut et
+cliquez sur Install / Update. Relancez Subsistence, ouvrez Mods dans votre profil
+solo, sélectionnez Kevin Companion et chargez la partie. Sortez sur un terrain
+dégagé : Kevin apparaît près de vous. Debout + Use : inventaire ; accroupi + Use :
+ordres. F6 puis RECALL KEVIN : rappel. S'il est mort, son équipement reste dans
+son sac. Chaque mise à jour nécessite le nouvel installateur.

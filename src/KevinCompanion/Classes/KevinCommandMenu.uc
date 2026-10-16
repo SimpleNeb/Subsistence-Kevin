@@ -1,6 +1,8 @@
 // Own Canvas UI over the existing HUD. No replacement player/HUD or Flash assets.
 class KevinCommandMenu extends Actor;
 
+const CommandRowCount = 8;
+
 var KevinCompanionPawn Kevin;
 var ColdPlayerController PlayerRef;
 var HUD HudRef;
@@ -245,6 +247,20 @@ event Tick(float DeltaTime)
         VSize(Kevin.Location - PlayerRef.Pawn.Location) > 450) { CloseMenu(); }
 }
 
+function int GetRowCount() { return CommandRowCount; }
+
+function name GatheringOrderForRow(int row)
+{
+    switch (row) {
+        case 3: return 'Wood';
+        case 4: return 'Fiber';
+        case 5: return 'Loot';
+        case 6: return 'Scrap';
+        case 7: return 'All';
+    }
+    return '';
+}
+
 function bool ExecuteRow(int row)
 {
     local KevinHunterController c;
@@ -253,12 +269,12 @@ function bool ExecuteRow(int row)
     local string reason;
     local bool result;
     if (!bOpen || Kevin == none || !Kevin.IsKevinOwnerInReach(PlayerRef) ||
-        Kevin.IsKevinInventoryBusy() || row < 0 || row > 4) { return false; }
+        Kevin.IsKevinInventoryBusy() || row < 0 || row >= GetRowCount()) { return false; }
     c = KevinHunterController(Kevin.Controller);
     if (c == none) { return false; }
     p = Kevin; pc = PlayerRef;
-    if (row == 3 || row == 4) {
-        result = c.StartGathering(row == 3 ? 'Wood' : 'Fiber', reason);
+    if (row >= 3) {
+        result = c.StartGathering(GatheringOrderForRow(row), reason);
         if (!result) { Feedback = reason; return false; }
     } else if (row < 2) {
         c.SetFollowing(row == 0);
@@ -282,10 +298,11 @@ function bool ExecuteRow(int row)
 function int HitRow(float x, float y)
 {
     local int row;
-    if (RowHeight <= 0 || x < PanelX + 18 * UiScale ||
-        x > PanelX + PanelWidth - 18 * UiScale || y < RowY) { return -1; }
+    if (bRecallHud || RowHeight <= 0 || x < PanelX + 18 * UiScale ||
+        x > PanelX + PanelWidth - 18 * UiScale || y < RowY ||
+        y >= RowY + RowHeight * GetRowCount()) { return -1; }
     row = int((y - RowY) / RowHeight);
-    if (row >= 0 && row < 5) { return row; }
+    if (row >= 0 && row < GetRowCount()) { return row; }
     return -1;
 }
 
@@ -307,14 +324,14 @@ simulated event PostRenderFor(PlayerController pc, Canvas canvas, vector cameraP
     c = KevinHunterController(Kevin.Controller);
     if (c == none) { return; }
     ViewWidth = canvas.SizeX; ViewHeight = canvas.SizeY;
-    UiScale = FMin(FMin(ViewWidth / 760.0, ViewHeight / 540.0), 1.25);
+    UiScale = FMin(FMin(ViewWidth / 760.0, ViewHeight / 650.0), 1.25);
     PanelWidth = 590 * UiScale;
     PanelX = (ViewWidth - PanelWidth) * 0.5;
-    PanelY = (ViewHeight - 420 * UiScale) * 0.5;
+    PanelY = (ViewHeight - 582 * UiScale) * 0.5;
     RowHeight = 54 * UiScale;
     RowY = PanelY + 90 * UiScale;
     canvas.SetDrawColor(9, 18, 15, 242); canvas.SetPos(PanelX, PanelY);
-    canvas.DrawRect(PanelWidth, 420 * UiScale);
+    canvas.DrawRect(PanelWidth, 582 * UiScale);
     canvas.SetDrawColor(158, 189, 125, 255); canvas.SetPos(PanelX, PanelY);
     canvas.DrawRect(PanelWidth, 3 * UiScale);
     canvas.Font = class'Engine'.static.GetMediumFont();
@@ -323,7 +340,7 @@ simulated event PostRenderFor(PlayerController pc, Canvas canvas, vector cameraP
     status = c.GetGatheringOrder() != '' ? c.GetGatheringStatus() :
         (c.GetFollowingOrder() ? "Following you" : "Staying here");
     DrawLabel(canvas, PanelX + 24 * UiScale, PanelY + 56 * UiScale, status, 168, 188, 165);
-    for (i = 0; i < 5; i++) {
+    for (i = 0; i < GetRowCount(); i++) {
         y = RowY + i * RowHeight;
         canvas.SetPos(PanelX + 16 * UiScale, y);
         if (i == SelectedRow) { canvas.SetDrawColor(44, 70, 49, 255); }
@@ -335,13 +352,16 @@ simulated event PostRenderFor(PlayerController pc, Canvas canvas, vector cameraP
             case 2: title = "3   INVENTORY & EQUIPMENT"; rowHelp = "Carry supplies, equip weapons, and change clothing."; break;
             case 3: title = "4   GATHER WOOD"; rowHelp = c.HasUsableAxe() ? "Chop nearby trees with his supplied axe." : "Give Kevin a usable axe first."; break;
             case 4: title = "5   GATHER FIBER"; rowHelp = "Collect nearby fiber until his cargo is full."; break;
+            case 5: title = "6   LOOT BOXES"; rowHelp = "Collect supplies from ordinary outdoor loot boxes."; break;
+            case 6: title = "7   SCRAP METAL"; rowHelp = "Pick up nearby loose scrap metal."; break;
+            case 7: title = "8   GATHER ALL"; rowHelp = "Collect loot boxes, fiber, scrap, and supported plants."; break;
         }
         DrawLabel(canvas, PanelX + 30 * UiScale, y + 8 * UiScale, title, 234, 239, 226);
         DrawLabel(canvas, PanelX + 30 * UiScale, y + 29 * UiScale, rowHelp, 165, 184, 164, 0.82);
     }
-    DrawLabel(canvas, PanelX + 24 * UiScale, PanelY + 365 * UiScale,
-        Feedback != "" ? Feedback : "Click a command, press 1-5, or use arrows + Enter.", 216, 195, 144, 0.86);
-    DrawLabel(canvas, PanelX + 24 * UiScale, PanelY + 391 * UiScale, "Esc / right-click: close", 152, 171, 151, 0.8);
+    DrawLabel(canvas, PanelX + 24 * UiScale, PanelY + 527 * UiScale,
+        Feedback != "" ? Feedback : "Click a command, press 1-8, or use arrows + Enter.", 216, 195, 144, 0.86);
+    DrawLabel(canvas, PanelX + 24 * UiScale, PanelY + 553 * UiScale, "Esc / right-click: close", 152, 171, 151, 0.8);
     canvas.SetDrawColor(238, 238, 210, 255); canvas.SetPos(CursorX - 5, CursorY - 1);
     canvas.DrawRect(11, 3); canvas.SetPos(CursorX - 1, CursorY - 5); canvas.DrawRect(3, 11);
     RenderedFrames++;

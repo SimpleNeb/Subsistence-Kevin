@@ -1,10 +1,10 @@
-// Transient work order. Resources come only from a validated world tree/bush.
-// UNCOMPILED feature work; never serialize or resume an in-flight resource action.
+// Transient work order. Resources come only from validated native world pools.
+// Never serialize or resume an in-flight pickup, container or tree action.
 class KevinGatheringJob extends Actor
     dependson(ColdLootSpawner);
 
-const MaxOwnerTargetDistance = 4000;
-const MaxOwnerWorkDistance = 4500;
+const MaxOwnerTargetDistance = 5000;
+const MaxOwnerWorkDistance = 5500;
 const ApproachTimeoutSeconds = 35;
 
 var KevinHunterController Worker;
@@ -23,12 +23,16 @@ var array<Actor> SkippedResources;
 var string LastReason;
 var string TargetRejection;
 var string FiberContextRejection;
+var string LootContextRejection;
+var float TargetWorkStartedAt;
+var float TargetWorkLastAt;
+var bool bSkippedForCapacity;
 
 function bool InitializeJob(KevinHunterController controller, name kind)
 {
     Worker = controller;
     JobKind = kind;
-    if (Worker == none || Worker.Pawn == none || (kind != 'Wood' && kind != 'Fiber')) { return false; }
+    if (Worker == none || Worker.Pawn == none || (kind != 'Wood' && kind != 'Fiber' && kind != 'Loot' && kind != 'Scrap' && kind != 'All')) { return false; }
     SearchOrigin = Worker.Pawn.Location;
     if (kind == 'Wood') {
         WoodHarvester = Spawn(class'KevinWoodHarvester', self);
@@ -50,7 +54,8 @@ function bool CanWorkNow()
         !Worker.bDeleteMe && !Worker.bCommandMenuOpen && Worker.Pawn != none && Worker.Pawn.Health > 0 &&
         Worker.CompanionOwner != none && Worker.CompanionOwner.Pawn != none && Worker.CompanionOwner.Pawn.Health > 0 &&
         KevinCompanionPawn(Worker.Pawn) != none && !KevinCompanionPawn(Worker.Pawn).IsKevinInventoryBusy() &&
-        !Worker.IsInCombat() && !Worker.bIsInBase && !Worker.IsInCave() && !Worker.IsInLavaCave() &&
+        !Worker.IsInCombat() && Worker.Pawn.Physics != PHYS_Swimming &&
+        (Worker.Pawn.PhysicsVolume == none || !Worker.Pawn.PhysicsVolume.bWaterVolume) && !Worker.bIsInBase && !Worker.IsInCave() && !Worker.IsInLavaCave() &&
         VSize(Worker.Pawn.Location - Worker.CompanionOwner.Pawn.Location) <= MaxOwnerWorkDistance && GetInventory() != none;
 }
 
@@ -62,6 +67,211 @@ function bool CanFitSingle(class<ColdInventoryItem> itemClass, int count)
     entry.Count = count;
     items.AddItem(entry);
     return CanFitYield(items);
+}
+
+function bool HasCargoRoom()
+{
+    local ColdInventoryItem item;
+    local int i;
+    if (GetInventory() == none) { return false; }
+    for (i = 0; i < 35; i++) {
+        item = GetInventory().GetInvItem(i);
+        if (item == none || (!item.bDeleteMe && item.bIsStackable && item.Count < item.MaxStackCount)) { return true; }
+    }
+    return false;
+}
+
+function bool CanStartOrder()
+{
+    if (JobKind == 'Wood') { return CanFitSingle(class'ColdInventoryItem_Log', 1); }
+    if (JobKind == 'Fiber') { return CanFitSingle(class'ColdInventoryItem_Fibers', 1); }
+    // Actual per-item capacity is checked when the native yield is known. A full
+    // cargo can still receive a matching partial stack; never assume it is fiber.
+    return (JobKind == 'Loot' || JobKind == 'Scrap' || JobKind == 'All') && HasCargoRoom();
+}
+
+function bool CanFitCargoItem(ColdInventoryItem item)
+{
+    local ColdInventoryItem current;
+    local int i, remaining;
+    local bool freeSlot;
+    if (item == none || item.bDeleteMe || item.Count < 1 || GetInventory() == none ||
+        !class'KevinAccessModule'.static.HasSupportedItemStorage(item)) { return false; }
+    remaining = item.Count;
+    for (i = 0; i < 35; i++) {
+        current = GetInventory().GetInvItem(i);
+        if (current == none) { freeSlot = true; }
+        else if (item.bIsStackable && !current.bDeleteMe && current.CanStackItem(item)) {
+            remaining -= Max(0, current.MaxStackCount - current.Count);
+        }
+    }
+    return remaining <= 0 || freeSlot;
+}
+
+function bool CanFitPreparedItems(array<ColdInventoryItem> prepared)
+{
+    local ColdInventoryItem slots[35];
+    local int counts[35];
+    local int i, j, remaining, amount;
+    if (GetInventory() == none) { return false; }
+    for (i = 0; i < 35; i++) {
+        slots[i] = GetInventory().GetInvItem(i);
+        if (slots[i] != none) { counts[i] = slots[i].Count; }
+    }
+    // Predict native insertion without modifying live item counts, perishability
+    // or ownership. CanStackItem respects native edible-state restrictions.
+    for (i = 0; i < prepared.Length; i++) {
+        if (prepared[i] == none || prepared[i].bDeleteMe || prepared[i].Count < 1 ||
+            !class'KevinAccessModule'.static.HasSupportedItemStorage(prepared[i])) { return false; }
+        remaining = prepared[i].Count;
+        if (prepared[i].bIsStackable) {
+            for (j = 0; j < 35; j++) {
+                if (slots[j] == none || slots[j].bDeleteMe || !slots[j].CanStackItem(prepared[i])) { continue; }
+                amount = Min(remaining, Max(0, slots[j].MaxStackCount - counts[j]));
+                counts[j] += amount;
+                remaining -= amount;
+            }
+        }
+        if (remaining > 0) {
+            for (j = 0; j < 35; j++) {
+                if (slots[j] == none) { slots[j] = prepared[i]; counts[j] = remaining; remaining = 0; break; }
+            }
+        }
+        if (remaining > 0) { return false; }
+    }
+    return true;
+}
+
+function bool IsEligiblePickup(ColdLootVegetation plant)
+{
+    local class<ColdLootVegetation> kind;
+    if (plant == none || plant.bDeleteMe || plant.bHidden || plant.bHasHadFakePickup) { return false; }
+    kind = plant.Class;
+    if (JobKind == 'Fiber') {
+        return kind == class'ColdLootVegetation_FiberPlant' || kind == class'ColdLootVegetation_FiberPatch';
+    }
+    if (JobKind == 'Scrap') { return kind == class'ColdLootVegetation_ScrapMetal'; }
+    if (JobKind != 'All') { return false; }
+    // Exact native classes, backed by the surface vegetation factory. Dropped
+    // inventory, grown crops, cave mushrooms and underwater pickups are separate.
+    return kind == class'ColdLootVegetation_FiberPlant' || kind == class'ColdLootVegetation_FiberPatch' ||
+        kind == class'ColdLootVegetation_ScrapMetal' || kind == class'ColdLootVegetation_Berries' ||
+        kind == class'ColdLootVegetation_RosehipBerries' || kind == class'ColdLootVegetation_Carrot' ||
+        kind == class'ColdLootVegetation_Onion' || kind == class'ColdLootVegetation_Potato' ||
+        kind == class'ColdLootVegetation_Cotton' || kind == class'ColdLootVegetation_Strawberry' ||
+        kind == class'ColdLootVegetation_Wheat' || kind == class'ColdLootVegetation_MedicinalCluster' ||
+        kind == class'ColdLootVegetation_LogPile';
+}
+
+function bool GetLootContext(ColdLootContainer container, out ColdLootPool_LootContainers pool,
+    out ColdSpawnPoint_LootFactory factory, out ColdAccessModule_LootStorage module)
+{
+    local int slot;
+    LootContextRejection = "not an ordinary live loot box";
+    pool = none; factory = none; module = none;
+    if (container == none || container.bDeleteMe || container.bHidden || !container.bUsesLootPool ||
+        (container.Class != class'ColdLootContainer_Ammo' && container.Class != class'ColdLootContainer_Medical' &&
+        container.Class != class'ColdLootContainer_BuildingSupplies') ||
+        (JobKind != 'Loot' && JobKind != 'All') || Worker == none || Worker.CompanionOwner == none) { return false; }
+    pool = container.GetOwningLootPool();
+    LootContextRejection = "loot box belongs to another or missing player pool";
+    if (pool == none || pool.bDeleteMe || pool.GetPc() != Worker.CompanionOwner ||
+        pool.SpawnPointBelongingTo == none || pool.SpawnPointBelongingTo.bDeleteMe ||
+        ColdSpawnPointWater(pool.SpawnPointBelongingTo) != none ||
+        ColdSpawnPointCave(pool.SpawnPointBelongingTo) != none ||
+        ColdSpawnPointLavaCave(pool.SpawnPointBelongingTo) != none) { return false; }
+    factory = pool.GetLootFactory();
+    slot = container.LootPoolIdx;
+    LootContextRejection = "loot box has no matching surface factory slot";
+    if (factory == none || factory.bDeleteMe || factory.IsInCave() || factory.SpawnPoint != pool.SpawnPointBelongingTo ||
+        slot >= ArrayCount(pool.ContainerSpawnsSpawned) || slot >= ArrayCount(factory.ContainerSpawns) ||
+        pool.ContainerSpawnsSpawned[slot] != container || factory.ContainerSpawns[slot].Type == 0 ||
+        factory.ContainerSpawns[slot].Loc != container.Location ||
+        pool.ContainerSpawns[slot].Loc != container.Location ||
+        pool.ContainerSpawns[slot].Type != factory.ContainerSpawns[slot].Type ||
+        class'ColdLootPoolHelper'.static.GetLootContainerTypeById(factory.ContainerSpawns[slot].Type) != container.Class ||
+        pool.ContainerSpawns[slot].bIsOpen != factory.ContainerSpawns[slot].bIsOpen ||
+        container.bIsOpen != factory.ContainerSpawns[slot].bIsOpen) { return false; }
+    LootContextRejection = "loot box is being accessed or unlocked by the player";
+    if (container.bIsBeingUnlocked || container.IsBeingAccessed() || pool.ContainerSpawns[slot].bIsBeingAccessed ||
+        factory.ContainerSpawns[slot].bIsBeingAccessed) { return false; }
+    module = ColdAccessModule_LootStorage(factory.ContainerSpawns[slot].AM);
+    LootContextRejection = "loot box inventory ownership differs";
+    if (factory.ContainerSpawns[slot].AM != none && (module == none || module.bDeleteMe ||
+        module.Owner != factory || module.OriginalOwner != factory || module.LootPoolIdx != slot ||
+        module.InvSize < 1 || module.InvSize != module.Items.Length || module.Items.Length > 49)) { return false; }
+    if ((container.bIsOpen && module == none) || (!container.bIsOpen && module != none)) { return false; }
+    LootContextRejection = "";
+    return true;
+}
+
+function bool IsLootItemOwned(ColdInventoryItem item, ColdAccessModule_LootStorage module, int slot)
+{
+    local int i;
+    if (item == none || item.bDeleteMe || item.Count < 1 || module == none || module.bDeleteMe || GetInventory() == none ||
+        slot < 0 || slot >= module.Items.Length || module.GetInvItem(slot) != item ||
+        item.Owner != module.Owner || item.InvSlotInfo.InvTypeId != 1 || item.InvSlotInfo.SlotId != slot ||
+        item.InvSlotInfo.ParentItem != none || !class'KevinAccessModule'.static.HasSupportedItemStorage(item)) { return false; }
+    for (i = 0; i < module.Items.Length; i++) { if (i != slot && module.GetInvItem(i) == item) { return false; } }
+    // A stale duplicate reference must not move an actor already owned by cargo.
+    for (i = 0; i < 49; i++) { if (GetInventory().GetInvItem(i) == item) { return false; } }
+    return true;
+}
+
+function bool LootContainer()
+{
+    local ColdLootContainer container;
+    local ColdLootPool_LootContainers pool;
+    local ColdSpawnPoint_LootFactory factory;
+    local ColdAccessModule_LootStorage module;
+    local ColdInventoryItem item;
+    local class<ColdLootContainer> containerClass;
+    local int i, count, slot;
+    if (!CanWorkNow() || !IsTargetInReach()) { return false; }
+    container = ColdLootContainer(TargetResource);
+    if (!GetLootContext(container, pool, factory, module)) { return false; }
+    if (!HasCargoRoom()) { LastReason = "Kevin's cargo is full."; return false; }
+    slot = container.LootPoolIdx;
+    if (!container.bIsOpen) {
+        // Spend the native unlock duration at the box. Do not borrow the player's
+        // inventory/UI or hold its ownership across ticks. Every attempt rechecks
+        // the live slot and stops if the player starts accessing it.
+        if (TargetWorkStartedAt < 0 || TargetWorkLastAt < 0 || WorldInfo.TimeSeconds - TargetWorkLastAt > 2.5) {
+            TargetWorkStartedAt = WorldInfo.TimeSeconds;
+        }
+        TargetWorkLastAt = WorldInfo.TimeSeconds;
+        if (WorldInfo.TimeSeconds - TargetWorkStartedAt < FMax(0.0, container.TimeToUnlock)) { return true; }
+        containerClass = container.Class;
+        // This native guarded entry point rolls the active table once, marks
+        // open/looted, and preserves difficulty, season and respawn accounting.
+        containerClass.static.FinishedUnlocking(Worker.CompanionOwner, none, pool, byte(slot));
+        if (!GetLootContext(container, pool, factory, module) || !container.bIsOpen || module == none) { return false; }
+    }
+    for (i = 0; i < module.Items.Length; i++) {
+        item = module.GetInvItem(i);
+        if (!IsLootItemOwned(item, module, i)) { continue; }
+        if (!CanFitCargoItem(item)) { bSkippedForCapacity = true; continue; }
+        count = item.Count;
+        // Detach before native stacking. Reset the entire slot record after the
+        // native notification, including its replication bit, so merging the last
+        // unit cannot ask Kevin's manager to clear the former external slot.
+        module.ClearSlot(i, false);
+        item.InvSlotInfo = class'ColdInventoryItem'.default.InvSlotInfo;
+        if (!AddPreparedItem(item)) {
+            // Native insertion drops any remainder at Kevin. All other actual
+            // items remain in the crate; never delete or recreate its contents.
+            LastReason = "Kevin's cargo changed; any loose collected items are at his feet.";
+            return false;
+        }
+        UnitsGathered += count;
+    }
+    // This native release path removes only an empty crate, destroys its empty
+    // module, updates visible pools and starts the ordinary respawn cooldown.
+    if (module.GetItemCount() == 0) { factory.NotifyPlayerReleasedContainerAccessModule(byte(slot), module); }
+    else { SkipTarget(); }
+    TargetResource = none;
+    TargetWorkStartedAt = -1; TargetWorkLastAt = -1;
+    return true;
 }
 
 function bool CanFitYield(array<ChosenLootItem> items)
@@ -122,26 +332,28 @@ function bool IsTreeAvailable(ColdTree tree)
     return true;
 }
 
-function bool GetFiberContext(ColdLootVegetation plant, out ColdLootPool pool,
+function bool GetPickupContext(ColdLootVegetation plant, out ColdLootPool pool,
     out ColdSpawnPoint_VegetationFactory factory, out class<ColdLootVegetation> vegetationClass)
 {
     local int slot;
-    FiberContextRejection = "not a live fiber actor";
-    if (plant == none || plant.bDeleteMe || (ColdLootVegetation_FiberPlant(plant) == none &&
-        ColdLootVegetation_FiberPatch(plant) == none)) { return false; }
+    FiberContextRejection = "not a supported live surface pickup";
+    if (!IsEligiblePickup(plant) || Worker == none || Worker.CompanionOwner == none) { return false; }
     pool = plant.GetLootPool();
     FiberContextRejection = "missing owning loot pool";
     if (pool == none || pool.bDeleteMe) { return false; }
     FiberContextRejection = "loot pool belongs to another player";
     if (pool.GetPc() != Worker.CompanionOwner) { return false; }
     FiberContextRejection = "loot pool has no spawn point";
-    if (pool.SpawnPointBelongingTo == none) { return false; }
+    if (pool.SpawnPointBelongingTo == none || pool.SpawnPointBelongingTo.bDeleteMe ||
+        ColdSpawnPointWater(pool.SpawnPointBelongingTo) != none ||
+        ColdSpawnPointCave(pool.SpawnPointBelongingTo) != none ||
+        ColdSpawnPointLavaCave(pool.SpawnPointBelongingTo) != none) { return false; }
     factory = pool.SpawnPointBelongingTo.VegetationFactory;
     slot = plant.LootPoolIdx;
     FiberContextRejection = "missing live vegetation factory";
-    if (factory == none || factory.bDeleteMe) { return false; }
+    if (factory == none || factory.bDeleteMe || ColdSpawnPoint_UnderwaterVegetationFactory(factory) != none) { return false; }
     FiberContextRejection = "loot slot out of range";
-    if (slot >= ArrayCount(pool.VegetationLootSpawnsSpawned)) { return false; }
+    if (slot >= ArrayCount(pool.VegetationLootSpawnsSpawned) || slot >= ArrayCount(factory.VegetationLootSpawns)) { return false; }
     FiberContextRejection = "loot slot actor identity differs";
     if (pool.VegetationLootSpawnsSpawned[slot] != plant) { return false; }
     FiberContextRejection = "factory slot already consumed";
@@ -157,14 +369,14 @@ function bool GetFiberContext(ColdLootVegetation plant, out ColdLootPool pool,
     return true;
 }
 
-function bool SelectFiberBush(ColdLootVegetation plant, out vector atLocation, out byte bushId)
+function bool SelectPickup(ColdLootVegetation plant, out vector atLocation, out byte bushId)
 {
     local ColdLootPool pool;
     local ColdSpawnPoint_VegetationFactory factory;
     local class<ColdLootVegetation> vegetationClass;
     local ColdLootVegetation_Cluster cluster;
     local int i;
-    if (!GetFiberContext(plant, pool, factory, vegetationClass)) { return false; }
+    if (!GetPickupContext(plant, pool, factory, vegetationClass)) { return false; }
     cluster = ColdLootVegetation_Cluster(plant);
     if (cluster == none) { atLocation = plant.Location; bushId = 0; return true; }
     for (i = 0; i < 8; i++) {
@@ -178,9 +390,25 @@ function bool SelectFiberBush(ColdLootVegetation plant, out vector atLocation, o
     return false;
 }
 
+// Retained entry points for existing fiber validation and callers.
+function bool GetFiberContext(ColdLootVegetation plant, out ColdLootPool pool,
+    out ColdSpawnPoint_VegetationFactory factory, out class<ColdLootVegetation> vegetationClass)
+{
+    if (plant == none || (plant.Class != class'ColdLootVegetation_FiberPlant' &&
+        plant.Class != class'ColdLootVegetation_FiberPatch')) { return false; }
+    return GetPickupContext(plant, pool, factory, vegetationClass);
+}
+
+function bool SelectFiberBush(ColdLootVegetation plant, out vector atLocation, out byte bushId)
+{
+    if (plant == none || (plant.Class != class'ColdLootVegetation_FiberPlant' &&
+        plant.Class != class'ColdLootVegetation_FiberPatch')) { return false; }
+    return SelectPickup(plant, atLocation, bushId);
+}
+
 function bool SetResourceTarget(Actor resource, vector resourceLocation, optional byte bushId)
 {
-    local vector start, hitLoc, hitNorm, ground;
+    local vector start, hitLoc, hitNorm, ground, direction;
     local Actor hit;
     TargetRejection = "missing actor";
     if (resource == none || Worker == none || Worker.Pawn == none) { return false; }
@@ -197,6 +425,13 @@ function bool SetResourceTarget(Actor resource, vector resourceLocation, optiona
         TargetRejection = "trunk blocked by " $ string(hit);
         if (hit != resource) { return false; }
         ground = hitLoc + Normal(start - hitLoc) * (Worker.Pawn.GetCollisionRadius() + 20);
+    } else if (ColdLootContainer(resource) != none) {
+        // Trace the ground beside the crate. A downward trace through its center
+        // hits the crate mesh instead of the landscape and cannot yield a stand.
+        direction = Worker.Pawn.Location - resourceLocation;
+        direction.Z = 0;
+        if (VSize(direction) < 1) { direction = vect(1,0,0); }
+        ground = resourceLocation + Normal(direction) * 130;
     }
     StandLocation = class'ColdPositionHelper'.static.GetPathingLocationFromLoc(
         Worker.Pawn, ground, true, 300, false, false, false, false);
@@ -204,6 +439,7 @@ function bool SetResourceTarget(Actor resource, vector resourceLocation, optiona
     if (StandLocation == vect(0,0,0)) { return false; }
     TargetRejection = "stand elevation difference";
     if (Abs(StandLocation.Z - Worker.Pawn.Location.Z) > 240) { return false; }
+    if (TargetResource != resource || TargetBush != bushId) { TargetWorkStartedAt = -1; TargetWorkLastAt = -1; }
     TargetResource = resource;
     TargetLocation = resourceLocation;
     TargetBush = bushId;
@@ -216,6 +452,10 @@ function bool FindResource()
 {
     local ColdTree tree;
     local ColdLootVegetation plant;
+    local ColdLootContainer container;
+    local ColdLootPool_LootContainers lootPool;
+    local ColdSpawnPoint_LootFactory lootFactory;
+    local ColdAccessModule_LootStorage lootModule;
     local Actor best;
     local vector bestLocation, atLocation;
     local byte bush, bestBush;
@@ -249,14 +489,14 @@ function bool FindResource()
                     " distance=" $ string(distance) $ " rejected=" $ TargetRejection);
             }
         }
-    } else {
+    } else if (JobKind != 'Loot') {
         foreach DynamicActors(class'ColdLootVegetation', plant) {
-            if (ColdLootVegetation_FiberPlant(plant) == none && ColdLootVegetation_FiberPatch(plant) == none) { continue; }
+            if (!IsEligiblePickup(plant)) { continue; }
             allFiber++;
             if (VSize(plant.Location - SearchOrigin) > SearchRadius) { outsideRange++; continue; }
             found++;
             if (SkippedResources.Find(plant) != INDEX_NONE) { skipped++; continue; }
-            if (!SelectFiberBush(plant, atLocation, bush)) {
+            if (!SelectPickup(plant, atLocation, bush)) {
                 if (found <= 8) { LogInternal("KEVIN GATHER FIBER context=" $ FiberContextRejection $ " actor=" $ string(plant)); }
                 continue;
             }
@@ -268,6 +508,20 @@ function bool FindResource()
             }
         }
     }
+    if (JobKind == 'Loot' || JobKind == 'All') {
+        foreach DynamicActors(class'ColdLootContainer', container) {
+            distance = VSize(container.Location - SearchOrigin);
+            if (distance > SearchRadius) { continue; }
+            if (SkippedResources.Find(container) != INDEX_NONE || distance >= bestDistance) { continue; }
+            if (!GetLootContext(container, lootPool, lootFactory, lootModule)) { continue; }
+            found++;
+            available++;
+            checked++;
+            if (SetResourceTarget(container, container.Location)) {
+                best = container; bestLocation = container.Location; bestBush = 0; bestDistance = distance;
+            }
+        }
+    }
     if (best != none) { return SetResourceTarget(best, bestLocation, bestBush); }
     TargetResource = none;
     LogInternal("KEVIN GATHER SEARCH EMPTY kind=" $ string(JobKind) $ " worker=" $ string(Worker.Pawn.Location) $
@@ -275,7 +529,12 @@ function bool FindResource()
         " radius=" $ string(SearchRadius) $ " outsideRange=" $ string(outsideRange) $ " skipped=" $ string(skipped) $
         " candidates=" $ string(found) $ " available=" $ string(available) $ " checked=" $ string(checked) $
         " allRenderedFiber=" $ string(allFiber));
-    LastReason = JobKind == 'Wood' ? "No reachable wood remains nearby." : "No reachable fiber remains nearby.";
+    if (JobKind == 'Wood') { LastReason = "No reachable wood remains nearby."; }
+    else if (JobKind == 'Fiber') { LastReason = "No reachable fiber remains nearby."; }
+    else if (JobKind == 'Scrap') { LastReason = "No reachable scrap metal remains nearby."; }
+    else if (JobKind == 'Loot') { LastReason = "No reachable ordinary loot boxes remain nearby."; }
+    else { LastReason = "No reachable surface pickups or ordinary loot boxes remain nearby."; }
+    if (bSkippedForCapacity) { LastReason = "No more nearby loot fits Kevin's cargo; leftovers stay in the world."; }
     return false;
 }
 
@@ -284,6 +543,8 @@ function bool IsTargetInReach()
     local Actor hit;
     local vector hitNorm, end, start;
     if (TargetResource == none || TargetResource.bDeleteMe || Worker == none || Worker.Pawn == none) { return false; }
+    if (Worker.CompanionOwner == none || Worker.CompanionOwner.Pawn == none ||
+        VSize(TargetLocation - Worker.CompanionOwner.Pawn.Location) > MaxOwnerTargetDistance) { return false; }
     start = Worker.Pawn.GetWeaponStartTraceLocation();
     if (ColdTree(TargetResource) != none) {
         end = ColdTree(TargetResource).GetGroundLocAtBaseOfTree() + vect(0,0,74);
@@ -307,6 +568,8 @@ function SkipTarget()
 {
     if (TargetResource != none && SkippedResources.Find(TargetResource) == INDEX_NONE) { SkippedResources.AddItem(TargetResource); }
     TargetResource = none;
+    TargetWorkStartedAt = -1;
+    TargetWorkLastAt = -1;
 }
 
 function bool PerformHarvest()
@@ -321,10 +584,18 @@ function bool PerformHarvest()
         if (!IsTreeAvailable(ColdTree(TargetResource))) { TargetResource = none; }
         return true;
     }
-    return HarvestFiber();
+    if (ColdLootContainer(TargetResource) != none) { return LootContainer(); }
+    return HarvestPickup();
 }
 
 function bool HarvestFiber()
+{
+    if (ColdLootVegetation_FiberPlant(TargetResource) == none &&
+        ColdLootVegetation_FiberPatch(TargetResource) == none) { return false; }
+    return HarvestPickup();
+}
+
+function bool HarvestPickup()
 {
     local ColdLootVegetation plant;
     local ColdLootVegetation_Cluster cluster;
@@ -338,7 +609,7 @@ function bool HarvestFiber()
     local int i, j, count;
     local bool changeState;
     plant = ColdLootVegetation(TargetResource);
-    if (!CanWorkNow() || !IsTargetInReach() || !GetFiberContext(plant, pool, factory, vegetationClass)) { return false; }
+    if (!CanWorkNow() || !IsTargetInReach() || !GetPickupContext(plant, pool, factory, vegetationClass)) { return false; }
     slot = plant.LootPoolIdx;
     oldState = factory.VegetationLootSpawns[slot]._State;
     interaction = 0;
@@ -348,19 +619,26 @@ function bool HarvestFiber()
         interaction = cluster.IsLastBush(TargetBush) ? byte(class'ColdLootVegetation_Cluster'.const.InteractionIdForPickedFinalPlant) : TargetBush;
     }
     if (!vegetationClass.static.IsPickupInteractionAllowed(interaction, oldState)) { return false; }
-    // Use the actual active native/modded table once; never award a fixed fiber
-    // amount independently of the bush. Capacity is checked before world mutation.
+    // Use the active native/modded table once. Check capacity before world mutation.
     items = vegetationClass.static.ChooseYield();
-    if (!CanFitYield(items)) { LastReason = "Kevin's cargo is full."; return false; }
+    if (!CanFitYield(items)) {
+        if (JobKind == 'All' && HasCargoRoom()) { bSkippedForCapacity = true; SkipTarget(); return true; }
+        LastReason = "Kevin's cargo is full."; return false;
+    }
     for (i = 0; i < items.Length; i++) {
         item = Spawn(items[i].ItemClass, self);
         if (item == none) {
             for (j = 0; j < prepared.Length; j++) { prepared[j].Destroy(); }
-            LastReason = "Could not collect this fiber."; return false;
+            LastReason = "Could not collect this pickup."; return false;
         }
         item.SetInitialCount(items[i].Count);
         prepared.AddItem(item);
         count += items[i].Count;
+    }
+    if (!CanFitPreparedItems(prepared)) {
+        for (j = 0; j < prepared.Length; j++) { prepared[j].Destroy(); }
+        if (JobKind == 'All' && HasCargoRoom()) { bSkippedForCapacity = true; SkipTarget(); return true; }
+        LastReason = "Kevin cannot fit this pickup in his cargo."; return false;
     }
     changeState = vegetationClass.static.ShouldPickupChangeStateInsteadOfRemove(interaction, oldState, newState);
     if (changeState) { factory.UpdateVegetationState(slot, newState); }
@@ -368,7 +646,7 @@ function bool HarvestFiber()
     if ((changeState && (newState == oldState || factory.VegetationLootSpawns[slot]._State != newState)) ||
         (!changeState && factory.VegetationLootSpawns[slot].LootType != 0)) {
         for (j = 0; j < prepared.Length; j++) { prepared[j].Destroy(); }
-        LastReason = "This fiber is no longer available."; return false;
+        LastReason = "This pickup is no longer available."; return false;
     }
     // The factory has now consumed this exact bush and updated the visible pool.
     // Native insertion owns/merges each actor; an unexpected failure drops the
@@ -395,7 +673,9 @@ simulated function Destroyed()
 
 defaultproperties
 {
-    SearchRadius=3500
+    TargetWorkStartedAt=-1
+    TargetWorkLastAt=-1
+    SearchRadius=4500
     bHidden=true
     bCollideActors=false
     bBlockActors=false

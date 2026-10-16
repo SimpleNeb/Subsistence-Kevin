@@ -34,10 +34,10 @@ function bool HandleKey(int ControllerId, name Key, EInputEvent EventType,
         Menu.CloseMenu(); return true;
     }
     if (Key == 'Up' || Key == 'XboxTypeS_DPad_Up' || Key == 'MouseScrollUp') {
-        Menu.SelectedRow = (Menu.SelectedRow + 4) % 5; return true;
+        Menu.SelectedRow = (Menu.SelectedRow + Menu.GetRowCount() - 1) % Menu.GetRowCount(); return true;
     }
     if (Key == 'Down' || Key == 'XboxTypeS_DPad_Down' || Key == 'MouseScrollDown') {
-        Menu.SelectedRow = (Menu.SelectedRow + 1) % 5; return true;
+        Menu.SelectedRow = (Menu.SelectedRow + 1) % Menu.GetRowCount(); return true;
     }
     if (EventType != IE_Pressed) { return true; }
     if (Key == 'Enter' || Key == 'XboxTypeS_A') { Menu.ExecuteRow(Menu.SelectedRow); return true; }
@@ -52,6 +52,9 @@ function bool HandleKey(int ControllerId, name Key, EInputEvent EventType,
     else if (Key == 'Three' || Key == 'NumPadThree') { Menu.ExecuteRow(2); }
     else if (Key == 'Four' || Key == 'NumPadFour') { Menu.ExecuteRow(3); }
     else if (Key == 'Five' || Key == 'NumPadFive') { Menu.ExecuteRow(4); }
+    else if (Key == 'Six' || Key == 'NumPadSix') { Menu.ExecuteRow(5); }
+    else if (Key == 'Seven' || Key == 'NumPadSeven') { Menu.ExecuteRow(6); }
+    else if (Key == 'Eight' || Key == 'NumPadEight') { Menu.ExecuteRow(7); }
     return true;
 }
 

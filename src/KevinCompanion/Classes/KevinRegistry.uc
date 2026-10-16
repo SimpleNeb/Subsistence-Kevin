@@ -62,8 +62,7 @@ function string GetRecallStatus()
     if (bCompanionDead) { return "Down - return in " $ string(GetRevivalSecondsRemaining()) $ "s"; }
     if (CompanionPawn == none || CompanionPawn.Health <= 0) { return "Kevin unavailable"; }
     if (Companion != none) {
-        if (Companion.GetGatheringOrder() == 'Wood') { return "Gathering wood"; }
-        if (Companion.GetGatheringOrder() == 'Fiber') { return "Gathering fiber"; }
+        if (Companion.GetGatheringOrder() != '') { return Companion.GetGatheringLabel(); }
         return Companion.GetFollowingOrder() ? "Following" : "Staying";
     }
     return "Kevin is alive";

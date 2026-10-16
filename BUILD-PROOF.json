@@ -1,32 +1,32 @@
 {
   "format": "kevin-public-build-proof-v1",
   "releaseStatus": "VALIDATED",
-  "version": "0.2.4-preview",
-  "buildId": "alpha68.19-preview-community-024",
-  "releaseKind": "scoped-community-gameplay-update",
-  "archiveSha256": "402f985c5eba4a6926262540e241bfc551501dadd1182a187af5432a91a789da",
-  "setupSha256": "664774692334387cc763b748184d1b8a528a45633dd368091e28184b6b3a1d88",
-  "manifestSha256": "d82933f09cb5ee948e6985396b1802c3f4cd558e4e53c3dd95fa60235f833d81",
-  "productionSha256": "55288f4fb238f02086ad5c572643df3c041dfc3585933cf5cf3f6363c202e27a",
-  "validationSha256": "949779e8fbeb0e13be96d7a77a19afa11899c2e6ccb1af664d37263e191807e6",
-  "frozenSourceManifestSha256": "81700842435ac39553496cc826548c607c13476f24632f5e75363a4d36cb9936",
-  "validationSourceManifestSha256": "1b2c038e8f976ec05518a0fdc151150a5ea9f09a922de52412158342c608f14b",
+  "version": "0.2.5-preview",
+  "buildId": "alpha68.19-preview-scavenging-025",
+  "releaseKind": "scoped-scavenging-archery-gameplay-update",
+  "archiveSha256": "684de53dd48574951722760455e8be983b45db803f5a37246c76469e0115fa2f",
+  "setupSha256": "6cfdfd25e1f3ddf5d177515abfc5b50a9a65a0d669c397f2ceca9da6f2c930cb",
+  "manifestSha256": "753e7287f653ec17b78f19ac902bce958d88558fb9184b04ccc53aa2d51bce5e",
+  "productionSha256": "48a87024639c15d3febca31fdecb65197a184c1cfbf6a95347de1c1f72df5db5",
+  "validationSha256": "f223b35da2205b94f3a9f292d52af7b03128802b07208475db591feb40f2a6fc",
+  "frozenSourceManifestSha256": "220fcb26370d4c4ec1c033f52f09feb8f0c139a656b030c8828d4f92a7b94083",
+  "validationSourceManifestSha256": "a4a2aa5d8908af01c9b1170df29f2c80020c8eac61c33d4a1db7a121cf228ba1",
   "productionSourceSha256": {
     "KevinAccessModule.uc": "f3471aedd97792fc3e6f5aa06a3d7078636baaa71190cc1bb246c83781ee597b",
     "KevinActivation.uc": "09e192e56d3613b866ad94457501a83b92182f4102bc02f4ecfbb93e8863dde2",
     "KevinBootstrap.uc": "ea4fc900f3cab42ee67e01f008f321efe0014ce8e875abcda186c4af2edf550e",
-    "KevinCommandMenu.uc": "4b9b5a188d90689803b3a305e83563d6bd24d7aa4c3a016a331684005f398dcb",
+    "KevinCommandMenu.uc": "2729f85219ad073fc945d46e4ec9bb8b95ac1facdc5f54ffb6d6ac6ac80b8be8",
     "KevinCompanionPawn.uc": "4637c07c4ff3990644f63200bc869eea5459482bafce55fc3b98271dcfb91e02",
-    "KevinDefensiveHunterController.uc": "1dd163780cbe120b7fde6432bc64ae0fdf6ddf201b4a9af19bf99668ee9aec40",
+    "KevinDefensiveHunterController.uc": "0427f16c2c0a93cd810efe7418274f7252950817c8a83686b685d956c755db9b",
     "KevinDefensiveMutator.uc": "a3c4bb6fcb9dfcaa6c220d9cb5e2f3b9f042dee0c8baafccdad3ee846595bfbd",
     "KevinDefensivePawn.uc": "24b804cdaedefc7e722cfe79c375291e3a5ea07c9dd2c8b985bd718db9be2578",
     "KevinDefensiveRegistry.uc": "396252683e84b1a9b1c577cf21998bc1c50f4349094d79fa15853f1fbc196131",
-    "KevinGatheringJob.uc": "fa3010e994966eeb564c153060e674fadb07824f881bf6786bd5b4e6f299434d",
-    "KevinHunterController.uc": "9cf47ecf852e4d25462873631c6929696695009550f322bc79bdc2a7b618e794",
+    "KevinGatheringJob.uc": "7d4b71d7f8db4703535d8bbf20f2cb07936ea65a90a006baa7eaaed20f0be4b6",
+    "KevinHunterController.uc": "5883a480cfccacf364883cae52eabf662ecee9e1fdeaaabe9f68f269119e3d6e",
     "KevinJson.uc": "457e608391070b13349d5a5df2411a6e329521dd2d6e43f219a56f62849528ff",
-    "KevinMenuInput.uc": "25164b8945e80c26cc315213f9f4e318a56dda1e77d6bc6655dd0f4b82835b70",
+    "KevinMenuInput.uc": "212b904999595cf5b257fffab79b8228146e7cc64502951a3b23f5cf2c268136",
     "KevinMutator.uc": "dc4f7799ef1ac9bfedaf0ae792b77fdac10b05e22199ebdafa0de7094c655088",
-    "KevinRegistry.uc": "0355246b3be6692fc22847e4aae5a958762708acde8039704e1fccf75b7fb8a3",
+    "KevinRegistry.uc": "e0623c01292fcdd7ea0309f65039256a3ea83e0dcdaee7866607075725dfbd47",
     "KevinRevivalBag.uc": "0f78056674bab3628b865685ef8a5b2409d3748cca0296aaa0689a2ffec58516",
     "KevinStartup.uc": "b90abfb5c054db3645a209191a9574be6fa31308653f8d2e636178d182895b76",
     "KevinWoodHarvester.uc": "801822527e6a9ddde7bafe33defdadfd15d2d75405886cfe7653780c572acfd2"
@@ -37,55 +37,66 @@
     "Build-Setup.ps1": "2a4f3c5d3f9b82cf6a7daeca3fe7c2e5f7ee4b937c9c2a7df36739cc61e68f25",
     "KevinSetup.cs": "3f3f1ce79baa0f44636af4eb48085878374f6558bf1ea7456a6a5a60fc71eb64"
   },
-  "promotionEvidenceSha256": "5af6a12a8b6f9fc616cd3ee0ddf281fe25fc0dc9bb37e6cc64f303486a4a50b3",
-  "gateSha256": "f66e284a7c236283153fa50bf8bb2be7ae7592aa2ce16a9ac83f6bbef5d35708",
+  "promotionEvidenceSha256": "6a2c26f15d868ead76dfb818b139e652fb5f6dcd070e300d088bdf53db2a6de8",
+  "gateSha256": "60ebd5eaa645b352d99a24bfa0708207b197b8ce9bfd1dea854c9dcf9cd92585",
   "signed": false,
   "staticAudits": 10,
   "freshGameplay": [
     {
       "label": "recall",
-      "name": "Kevin-024-Recall-04",
+      "name": "Kevin-025-Recall-Final03",
       "passed": 43
     },
     {
       "label": "inventory",
-      "name": "Kevin-024-Inventory-04",
+      "name": "Kevin-025-Inventory-Final03",
       "passed": 72
     },
     {
       "label": "combat",
-      "name": "Kevin-024-Combat-04",
+      "name": "Kevin-025-Combat-Final03",
       "passed": 28
     },
     {
       "label": "menu",
-      "name": "Kevin-024-Menu-04",
-      "passed": 26
+      "name": "Kevin-025-Menu-Final03",
+      "passed": 36
     },
     {
       "label": "gathering",
-      "name": "Kevin-024-Gathering-04",
+      "name": "Kevin-025-Gathering-Final03",
       "passed": 34
     },
     {
       "label": "revival",
-      "name": "Kevin-024-Revival-04",
+      "name": "Kevin-025-Revival-Final03",
       "passed": 27
     },
     {
       "label": "death",
-      "name": "Kevin-024-Death-04",
+      "name": "Kevin-025-Death-Final03",
       "passed": 20
+    },
+    {
+      "label": "scavenging",
+      "name": "Kevin-025-Scavenging-Final04",
+      "passed": 30
+    },
+    {
+      "label": "bow",
+      "name": "Kevin-025-Bow-Final03",
+      "passed": 54
     }
   ],
   "freshNativeSaveChecks": {
-    "priorSave30Upgrade": 18,
-    "firearmAttachmentDiskCycle": 23
+    "public024Save3Upgrade": 18,
+    "firearmAttachmentDiskCycle": 23,
+    "realScavengingDiskCycle": 25
   },
   "finalWrapperTests": {
     "passed": 28,
     "failed": 0,
-    "evidenceSha256": "84aae7e9701208ec4ae2123bc1f88a0a30193b7b501ee161dc89c6958d041d46"
+    "evidenceSha256": "8d3c71fb999828c83ca4932194b755eb35cad5f301bcf07cce6059ba20fad883"
   },
   "finalInstallationTests": {
     "passed": 154,
@@ -94,47 +105,47 @@
       "Clean": {
         "passed": 50,
         "failed": 0,
-        "evidenceSha256": "17cf568bc49bba70384a5273131b82daba9a02c3b58c94f3edd65ecf2b51dde3"
+        "evidenceSha256": "70e904cb6d63213d792b036e04be8b3d9c34b771bf2ab23b5678112b92fdea0e"
       },
       "DenyFixtureWrite": {
         "passed": 21,
         "failed": 0,
-        "evidenceSha256": "c6547d76c9e799c1abcc3398e6927dbc37a80cbe862040c531fdcd7aa2d3fee4"
+        "evidenceSha256": "b3f72735a2554dc1d16421d476d7282b0399c5959eb5b86dd6b491f9e615f0f5"
       },
       "ReadOnlyFourthCore": {
         "passed": 21,
         "failed": 0,
-        "evidenceSha256": "2ed3d4a2f644b28303aabea85c7dd121112aad59d1c46f57bb47f50b090512db"
+        "evidenceSha256": "f57ef02a6efcf525f9c19855585cbbbf69db4a5eb5461bb6c3fbbecb934ac6c9"
       },
-      "Public023Upgrade": {
+      "Public024Upgrade": {
         "passed": 62,
         "failed": 0,
-        "evidenceSha256": "1092ebe11627804b159c18d502b203b58a24fd26307f1cca023c5ef973ab910e"
+        "evidenceSha256": "564f4c49741fa310dac0ac1d97e8c635eb4139722d124f4cc8fead9868f7952c"
       }
     },
     "interactiveUacTested": false,
     "livePlayerInstallationModified": false
   },
   "inheritedEvidence": {
-    "promotionSha256": "06632d8fdf5576256101f878d0584295c4300d2fcef5c3a457ddcde9c2600138",
+    "promotionSha256": "5af6a12a8b6f9fc616cd3ee0ddf281fe25fc0dc9bb37e6cc64f303486a4a50b3",
     "rerun": false
   },
   "downloads": [
     {
-      "name": "Kevin-Setup-0.2.4-preview-Alpha68.19.exe",
-      "url": "https://github.com/SimpleNeb/Subsistence-Kevin/raw/ccb4ea4111a7a682bfac44f956ed104c97e25b78/downloads/Kevin-Setup-0.2.4-preview-Alpha68.19.exe",
-      "sha256": "664774692334387cc763b748184d1b8a528a45633dd368091e28184b6b3a1d88",
-      "length": 268288,
+      "name": "Kevin-Setup-0.2.5-preview-Alpha68.19.exe",
+      "url": "https://github.com/SimpleNeb/Subsistence-Kevin/raw/e0892d87ee6a25f3d89bcb1727c3bc1f88382d09/downloads/Kevin-Setup-0.2.5-preview-Alpha68.19.exe",
+      "sha256": "6cfdfd25e1f3ddf5d177515abfc5b50a9a65a0d669c397f2ceca9da6f2c930cb",
+      "length": 278016,
       "anonymousDownloadVerified": true,
-      "receiptSha256": "c6618753b487e0a506304ea79d5beb974ff87a68fd716d5a21ea407002d38668"
+      "receiptSha256": "58b599ae085699215d8a064a77a7a7c7a840916614fe7ef1c6aadb494b1128a6"
     },
     {
-      "name": "Kevin-Companion-0.2.4-preview-Alpha68.19.zip",
-      "url": "https://github.com/SimpleNeb/Subsistence-Kevin/raw/ccb4ea4111a7a682bfac44f956ed104c97e25b78/downloads/Kevin-Companion-0.2.4-preview-Alpha68.19.zip",
-      "sha256": "402f985c5eba4a6926262540e241bfc551501dadd1182a187af5432a91a789da",
-      "length": 238386,
+      "name": "Kevin-Companion-0.2.5-preview-Alpha68.19.zip",
+      "url": "https://github.com/SimpleNeb/Subsistence-Kevin/raw/e0892d87ee6a25f3d89bcb1727c3bc1f88382d09/downloads/Kevin-Companion-0.2.5-preview-Alpha68.19.zip",
+      "sha256": "684de53dd48574951722760455e8be983b45db803f5a37246c76469e0115fa2f",
+      "length": 247922,
       "anonymousDownloadVerified": true,
-      "receiptSha256": "2c99b9914c1b129e44a3a5749cfd8672914bba06ef0ca91df68f5a756c67baf2"
+      "receiptSha256": "d7a0e0fa232c7e8dc92d5fd6e471d75a39d4c68b831fef8680309a9a5ef8594a"
     }
   ],
   "limits": [

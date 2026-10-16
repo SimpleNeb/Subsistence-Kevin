@@ -138,6 +138,11 @@ function bool IsAllowedDefenseItem(ColdInventoryItem_Weapon item)
     return AllowedDefenseProjectile(item.WeaponClass, item.GetCurrentAmmoType()) != none;
 }
 
+function bool IsBowDefenseWeapon(class<ColdWeapon> weaponClass)
+{
+    return weaponClass == class'ColdWeapon_Bow' || weaponClass == class'ColdWeapon_BowRecurve';
+}
+
 function class<ColdProjectile> AllowedDefenseProjectile(class<ColdWeapon> w, class<ColdInventoryItem> ammo)
 {
     // Exact weapon + ammo pairs. Incendiary ProcessTouch applies burning before
@@ -160,6 +165,16 @@ function class<ColdProjectile> AllowedDefenseProjectile(class<ColdWeapon> w, cla
     if (ammo == class'ColdInventoryItem_Ammo44Rounds' && w == class'ColdWeapon_Revolver') {
         return class'ColdProjectile44Round';
     }
+    // Use each native bow's own ballistic projectile. Grenade arrows remain
+    // excluded; the bow consumes only arrows actually supplied in inventory.
+    if (ammo == class'ColdInventoryItem_AmmoArrows') {
+        if (w == class'ColdWeapon_Bow') { return class'ColdProjectileArrow'; }
+        if (w == class'ColdWeapon_BowRecurve') { return class'ColdProjectileArrowRecurve'; }
+    }
+    if (ammo == class'ColdInventoryItem_AmmoArrowsPremium') {
+        if (w == class'ColdWeapon_Bow') { return class'ColdProjectileArrowPremium'; }
+        if (w == class'ColdWeapon_BowRecurve') { return class'ColdProjectileArrowPremiumRecurve'; }
+    }
     return none;
 }
 
@@ -176,7 +191,7 @@ function bool IsAllowedLoadedAmmo(ColdWeapon w)
 
 function bool ItemHasDefenseAmmo(ColdInventoryItem_Weapon item, ColdPlayerInvManager inv)
 {
-    return IsAllowedDefenseItem(item) && (item.MagAmmoCount > 0 ||
+    return IsAllowedDefenseItem(item) && ((!IsBowDefenseWeapon(item.WeaponClass) && item.MagAmmoCount > 0) ||
         (item.GetCurrentAmmoType() != none && inv.GetItemCount(item.GetCurrentAmmoType()) > 0));
 }
 
@@ -232,6 +247,9 @@ function bool CanCompanionFire()
     w = GetHeldWeapon();
     if (w == none || !IsAllowedLoadedAmmo(w) ||
         !w.HasAmmo(0) || IsReloadingWeapon() || !IsAimingWeapon()) { return false; }
+    // Native bow StartFire requires the draw animation to reach aim-idle.
+    // Never bypass that lifecycle or manually create a projectile/arrow hit.
+    if (IsBowDefenseWeapon(w.Class) && w.GetCurrentCustomArmsAnim() != w.ArmAimIdleAnim) { return false; }
     start = Pawn.GetWeaponStartTraceLocation();
     line = DefenseAim - start;
     length = VSize(line);
