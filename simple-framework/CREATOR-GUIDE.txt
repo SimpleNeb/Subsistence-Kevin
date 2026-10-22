@@ -1,0 +1,75 @@
+SIMPLE FRAMEWORK - CREATOR GUIDE 1.0
+October 21, 2026. Windows Subsistence Alpha 68.19, single-player.
+
+Create a participating mod with its own Workshop item, identities, UnrealScript
+package and publisher key. Simple Framework supplies the shared player connection,
+verifies the package set, and starts selected modules at a world-session boundary.
+Players complete Simple Framework Setup once. Compatible participating-mod
+installs and updates then use that connection; an author must not require another
+installer or a per-mod launch option.
+
+Framework Workshop item:
+https://steamcommunity.com/sharedfiles/filedetails/?id=3824274376
+
+WHAT IS IN THIS KIT
+  example/                         Native metadata + manifest templates + module source
+  native/SimpleFrameworkModule.uc  Exact lifecycle base-contract source, API 1.0
+  authoring/                       Local P-256 signer source and strict schema reader
+  Build-Authoring.ps1              Builds only the local signing tool on Windows
+  MANIFEST-FORMAT.txt               Manifest, identity and update rules
+  NATIVE-LIFECYCLE.txt              Session ownership and supported runtime scope
+  SOURCE-PROVENANCE.json           Source hashes for the included implementation
+
+This is a source and format guide, not a complete portable UnrealScript compiler
+SDK. It contains no game packages, generated engine declarations, compiler stubs,
+test drivers, compiled game code or private keys. The separate developer workspace
+starter Build.ps1 depends on private toolchain/proof paths and is not included.
+
+AUTHOR WORKFLOW
+1. Obtain a compatible Subsistence/UDK authoring environment and the matching
+   released SimpleFramework.u at the root of your subscribed Framework item.
+   Compile a uniquely named package containing your module source against that
+   binary. The C# tool below signs files; it does not compile UnrealScript.
+2. Create your own Workshop item for Subsistence. Replace all REPLACE_* values in
+   example/manifest-template.json and example/mod.json with the real Workshop id,
+   Steam64 owner id and new canonical lowercase UUIDs. Never reuse the Framework
+   identity or another author's package/module/native-selection identity.
+3. Put the compiled CommunityHello.u and completed mod.json into a fresh content
+   directory. If you rename the package, update its path, packageName and entryClass
+   together. The manifest template stays outside the content directory.
+4. Build the local signer:
+     powershell.exe -NoProfile -File .\Build-Authoring.ps1
+   Generate a key in a NEW PRIVATE directory, outside all Workshop content:
+     .\build\ModuleAuthoring.exe keygen "C:\Private\MyFrameworkAuthorKey"
+   Keep this directory and the Windows profile that can decrypt it. The key uses
+   Windows CurrentUser DPAPI plus an owner-only ACL. No portable key export or
+   recovery command is supplied. Never upload author-key.dpapi.json.
+5. Sign the fresh content directory:
+     .\build\ModuleAuthoring.exe sign "C:\Private\MyFrameworkAuthorKey" "C:\MyMod\Content" "C:\MyMod\manifest-template.json"
+   This writes Content\simple-framework.json. Existing output is refused. Normal
+   sign computes each declared file's length/hash and checks the strict schema.
+   The local roundtrip result does not assert Steam ownership or gameplay success.
+6. Upload your completed mod.json, compiled .u and simple-framework.json through
+   your normal Workshop uploader. Set the exact sfkey-v1-<fingerprint> tag printed
+   by keygen; your uploader must support custom publisher tags. Add Simple Framework
+   as a required Workshop item and explain its one-time Setup in your instructions.
+   The signing tool does not upload, add tags or change required items remotely.
+7. Test an actual subscribed download after Framework Setup, with Framework and
+   your mod enabled. Test load, return to menu, another world and save/reload if
+   your code affects saved data. A signature cannot prove those behaviors.
+
+For an update, keep identities and publisher continuity, increase sequence and
+publish a complete compatible content set. Compatible releases on the same track
+and written state version can keep upgradeFrom empty; players may skip versions.
+Read MANIFEST-FORMAT.txt for the exact compatibility and transition rules.
+
+CURRENT LIMITS
+Only declared .u script packages are mounted. A signed data file is authenticated
+but is not automatically mounted or exposed to UnrealScript. General .upk assets,
+custom maps, multiplayer/server operation and a breaking state-migration executor
+are not supported by this creator workflow. Modules are cooperative game code,
+not sandboxed plugins. No hot replacement of a loaded package occurs.
+
+This kit does not publish your mod, promise an arbitrary UDK package is compatible,
+or grant rights to redistribute proprietary Subsistence/game/compiler files.
+The goal is a free community foundation that other authors can build upon.
