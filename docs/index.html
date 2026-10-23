@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Simple Framework | Connect once</title>
+<style>
+:root{color-scheme:light;--cream:#f7f3e7;--green:#1e4335;--gold:#a67a28}*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--green);font:18px/1.55 system-ui,sans-serif}main{max-width:850px;margin:0 auto;padding:48px 24px 64px}.brand{font-size:.8rem;font-weight:800;letter-spacing:.15em;color:var(--gold)}h1{font-size:clamp(2.2rem,6vw,3.8rem);line-height:1.1;margin:.4em 0}h2{font-size:1.25rem;margin:0 0 12px}.intro{font-size:1.1rem;max-width:650px}.connected{border-left:4px solid var(--gold);padding:12px 20px;margin:30px 0;background:#fffaf0}.step{background:#fffdf8;border:1px solid #dad4c5;border-radius:12px;padding:24px;margin:20px 0}.number{color:var(--gold);font-weight:800;font-size:.8rem;text-transform:uppercase;letter-spacing:.1em}code{display:block;overflow-wrap:anywhere;background:#eeeee4;border-radius:6px;padding:15px;margin:16px 0;font-size:.91rem;user-select:all}button{background:var(--green);color:var(--cream);border:0;border-radius:6px;padding:13px 22px;font:700 1rem system-ui;cursor:pointer}button:hover{background:#2e604b}button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:4px}.status{min-height:1.6em;font-size:.95rem;margin:10px 0 0}a{color:inherit;text-underline-offset:3px}footer{font-size:.9rem;margin-top:36px}strong{font-weight:750}
+</style>
+<main>
+<div class="brand">SIMPLE FRAMEWORK</div>
+<h1>Connect once.<br>Then just play.</h1>
+<p class="intro">Start the one-time connection from Subsistence's main menu. These two buttons copy exactly the command you need.</p>
+<aside class="connected"><strong>Already connected?</strong> You can skip these commands. In Subsistence, open <strong>Options &gt; Check Mods</strong> for updates and repair.</aside>
+<section class="step"><div class="number">Before you start</div><h2>Subscribe, download, open the game.</h2><p>With Subsistence closed, subscribe to Simple Framework and your chosen mods. Let Steam finish downloading. Open Subsistence and stay at the main menu.</p></section>
+<section class="step"><div class="number">First command</div><h2>Start the connection.</h2><p>Press <strong>=</strong> at the main menu. Copy this command, paste with <strong>Ctrl+V</strong>, then press <strong>Enter</strong>.</p><code id="first-command">exec ../../../workshop/content/418030/3824274376/SF-CONNECT.txt</code><button type="button" data-command="first-command" aria-describedby="first-status">Copy first command</button><p class="status" id="first-status" role="status" aria-live="polite"></p><p>Press Esc until the console closes, then choose <strong>Exit Game</strong>.</p></section>
+<section class="step"><div class="number">Second command</div><h2>Reopen the game and finish connecting.</h2><p>Stay at the main menu. Press <strong>=</strong>, paste the second command and press <strong>Enter</strong>.</p><code id="second-command">exec ../../../workshop/content/418030/3824274376/SF-CONNECT-OPEN.txt</code><button type="button" data-command="second-command" aria-describedby="second-status">Copy second command</button><p class="status" id="second-status" role="status" aria-live="polite"></p><p>The connection helper opens and the game closes. Follow the helper. If it asks, choose <strong>Steam &gt; Exit</strong>, then continue.</p></section>
+<section class="step"><div class="number">You're connected</div><h2>Choose your mods and play.</h2><p>When the helper confirms the connection, reopen Steam and Subsistence. Enable Simple Framework and your chosen mods, then load into your world.</p><p>Later, open <strong>Options &gt; Check Mods</strong> whenever you need the Simple Framework Control Panel.</p></section>
+<footer><a href="https://steamcommunity.com/sharedfiles/filedetails/?id=3824274376">Back to Simple Framework on Steam</a><p>Free mods. One shared connection. Built with the community.</p></footer>
+</main>
+<script>
+'use strict';
+for (const button of document.querySelectorAll('button[data-command]')) {
+  button.addEventListener('click', async () => {
+    const code = document.getElementById(button.dataset.command);
+    const status = document.getElementById(button.getAttribute('aria-describedby'));
+    status.textContent = '';
+    try {
+      if (!window.isSecureContext || !navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+      await navigator.clipboard.writeText(code.textContent.trim());
+      status.textContent = 'Copied. Paste in the game with Ctrl+V, then press Enter.';
+    } catch {
+      const range = document.createRange();
+      range.selectNodeContents(code);
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      status.textContent = 'Automatic copy is unavailable in this browser. The command is selected: press Ctrl+C, then paste in the game.';
+    }
+  });
+}
+</script>
+</html>
